@@ -164,6 +164,9 @@ h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
 .dots i.on{background:var(--mint)}
 input[type=text],input[type=date],select{border:2px solid var(--line);border-radius:12px;padding:10px;font-size:16px;font-family:var(--body);background:var(--card);color:var(--ink)}
 
+.howto{background:var(--jaune-pale);border:1.5px solid #f3e2a0;border-radius:16px;padding:12px 14px}
+.howto summary{font-weight:800;cursor:pointer}
+.howto ol{margin:10px 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 /* ---------- overlays ---------- */
 .overlay{position:fixed;inset:0;background:rgba(67,51,74,.35);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal{background:var(--card);border-radius:24px;padding:20px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px}
@@ -725,6 +728,17 @@ function settings(){
   <section class="card" style="display:flex;flex-direction:column;gap:12px">
    <h2>Sauvegarder ma progression</h2>
    <p class="muted" style="margin:0">Ta progression est gardée dans ce navigateur, sur cet appareil. Pour ne rien perdre (ou continuer sur un autre appareil), copie ton code de sauvegarde et garde-le dans tes notes ou envoie-le-toi par message.</p>
+   <details class="howto" open>
+     <summary>Comment marche le code de sauvegarde ?</summary>
+     <ol>
+       <li><b>C'est une photo de ta progression.</b> Le code contient ton pseudo, tes os, tes accessoires, tes badges et le niveau de chaque mot, au moment où tu le crées.</li>
+       <li><b>Pour sauvegarder :</b> touche « Créer mon code de sauvegarde », puis « Copier le code ». Colle-le dans tes notes ou envoie-le-toi par message.</li>
+       <li><b>Pour retrouver ta progression</b> (nouveau téléphone, autre ordi, données effacées) : ouvre Woopy, va dans Réglages, colle le code dans « Restaurer une sauvegarde » et touche « Restaurer ».</li>
+       <li><b>Il ne se met pas à jour tout seul.</b> Refais un code après chaque grosse session et garde toujours le plus récent.</li>
+       <li><b>Restaurer remplace tout</b> ce qu'il y a sur l'appareil par le contenu du code.</li>
+     </ol>
+     <p class="muted" style="margin:0;font-size:14px">汪！Sans code, ta progression reste seulement dans ce navigateur. Navigation privée ou historique effacé, et pouf, je redeviens un chiot.</p>
+   </details>
    <button class="btn alt" id="exp">Créer mon code de sauvegarde</button>
    <div id="expBox" class="hidden" style="display:flex;flex-direction:column;gap:8px">
      <textarea id="expCode" readonly rows="4" aria-label="Code de sauvegarde" style="width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--paper);color:var(--ink);word-break:break-all"></textarea>
