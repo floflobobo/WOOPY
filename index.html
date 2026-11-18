@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Woopy 汪汪 · vocabulaire IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Monde pastel : papier rose pâle, rose surligneur = essentiel, jaune surligneur = à revoir, encre prune pour le texte */
+  --paper:#fff7fa;
+  --card:#ffffff;
+  --ink:#43334a;
+  --ink-soft:#8a7790;
+  --rose:#ff8fb8;
+  --rose-pale:#ffe1ec;
+  --jaune:#ffd95a;
+  --jaune-pale:#fff5c7;
+  --mint:#7fd8be;
+  --mint-pale:#dcf6ee;
+  --red:#e8576b;
+  --line:#f1dbe5;
+  --display:"Baloo 2", "Nunito", system-ui, sans-serif;
+  --body:"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --zh:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+.zh{font-family:var(--zh)}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+.app{max-width:760px;margin:0 auto;padding:12px 16px 96px;min-height:100%}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:4px 0 10px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:22px}
+.brand small{font-family:var(--zh);font-weight:600;color:var(--rose);font-size:15px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip.bone{background:var(--jaune-pale);border-color:#f3e2a0}
+.chip.count{background:var(--rose-pale);border-color:#f7c3d6}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1.5px solid var(--line);display:flex;justify-content:center;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.nav .in{display:flex;max-width:760px;width:100%}
+.nav button{flex:1;background:none;border:0;padding:8px 2px 9px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;font-weight:700;color:var(--ink-soft)}
+.nav button .ic{font-family:var(--zh);font-size:19px;line-height:1.1}
+.nav button[aria-current="true"]{color:var(--ink)}
+.nav button[aria-current="true"] .ic{color:var(--rose)}
+.hidden{display:none !important}
+
+/* ---------- cards & buttons ---------- */
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.btn{border:0;border-radius:16px;padding:13px 18px;font-weight:800;font-size:17px;background:var(--rose);color:#fff;box-shadow:0 4px 0 #e06f98;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #e06f98}
+.btn.alt{background:var(--jaune);color:var(--ink);box-shadow:0 4px 0 #e2b92e}
+.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.btn.mint{background:var(--mint);color:#173f35;box-shadow:0 4px 0 #57b79b}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.wide{width:100%}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--ink-soft)}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800}
+.tag.r{background:var(--rose-pale);color:#c2416e}
+.tag.j{background:var(--jaune-pale);color:#8a6d00}
+
+/* ---------- home ---------- */
+.hero{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
+@media (max-width:520px){.hero{grid-template-columns:1fr;text-align:center}.hero .woopywrap{margin:0 auto}}
+.woopywrap{width:200px;height:200px;position:relative}
+.woopywrap svg{width:100%;height:100%;overflow:visible}
+.bubble{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:12px 14px;font-weight:700}
+.bubble .zh{color:#c2416e}
+.stage{font-size:13px;color:var(--ink-soft);font-weight:700;margin-top:8px}
+.bar{height:12px;border-radius:999px;background:#f6e9ef;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--rose),#ffb3cd)}
+.bar.y>i{background:linear-gradient(90deg,#f7c834,var(--jaune))}
+.bar.m>i{background:linear-gradient(90deg,#5fcaa9,var(--mint))}
+.stat{display:flex;flex-direction:column;gap:6px}
+.stat b{font-variant-numeric:tabular-nums}
+.countdown{display:flex;align-items:center;gap:12px;background:var(--jaune-pale);border:1.5px solid #f3e2a0;border-radius:18px;padding:12px 14px}
+.countdown .n{font-family:var(--display);font-weight:800;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+
+/* ---------- setup ---------- */
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:9px 12px;font-weight:700;font-size:15px}
+.seg button[aria-pressed="true"]{background:var(--rose-pale);border-color:var(--rose);color:#a3315a}
+.seg.y button[aria-pressed="true"]{background:var(--jaune-pale);border-color:#e9c43a;color:#6d5600}
+.label{font-weight:800;font-size:14px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin:0 0 6px}
+
+/* ---------- game ---------- */
+.gamebar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.hearts{font-size:22px;letter-spacing:2px}
+.qcard{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:18px 16px;text-align:center;position:relative}
+.prompt-kind{font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+.big{font-family:var(--zh);font-size:56px;line-height:1.2;margin:8px 0;word-break:keep-all}
+.big.fr{font-family:var(--display);font-size:32px;font-weight:700}
+.big.py{font-family:var(--body);font-size:36px;font-weight:800}
+.sentence{font-family:var(--zh);font-size:24px;line-height:1.7;margin:10px 0}
+.sentence .gap{display:inline-block;min-width:2.4em;border-bottom:3px solid var(--rose);margin:0 2px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:420px){.opts{grid-template-columns:1fr}}
+.opt{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:14px 10px;font-weight:700;font-size:17px;box-shadow:0 3px 0 var(--line);min-height:58px}
+.opt.zh{font-size:26px}
+.opt.ok{background:var(--mint-pale);border-color:var(--mint);box-shadow:0 3px 0 var(--mint)}
+.opt.ko{background:#ffe3e7;border-color:var(--red);box-shadow:0 3px 0 var(--red)}
+.opt:disabled{cursor:default}
+.answer{display:flex;gap:8px;margin-top:14px}
+.answer input{flex:1;min-width:0;border:2px solid var(--line);border-radius:14px;padding:12px;font-size:20px;font-family:var(--body);background:var(--paper);color:var(--ink)}
+.hint{font-size:13px;color:var(--ink-soft);margin-top:8px}
+.feedback{margin-top:12px;border-radius:18px;padding:12px 14px;text-align:left;display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center}
+.feedback.ok{background:var(--mint-pale)}
+.feedback.ko{background:#ffe8ec}
+.feedback .mini{width:76px;height:76px}
+.feedback .word{font-family:var(--zh);font-size:24px;font-weight:700}
+.feedback .ex{font-family:var(--zh);font-size:15px;color:var(--ink-soft);margin-top:2px}
+.feedback .say{font-weight:800}
+.flash{perspective:900px;margin:6px auto;max-width:420px;height:260px}
+.flash .inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;cursor:pointer}
+.flash.flipped .inner{transform:rotateY(180deg)}
+.flash .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;border:1.5px solid var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:6px}
+.flash .back{transform:rotateY(180deg);background:var(--rose-pale)}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.pairs .col{display:flex;flex-direction:column;gap:8px}
+.pairs button{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:12px 8px;font-weight:700;min-height:54px;box-shadow:0 3px 0 var(--line)}
+.pairs button.zh{font-size:24px}
+.pairs button.sel{border-color:var(--rose);background:var(--rose-pale)}
+.pairs button.done{visibility:hidden}
+.pairs button.ko{border-color:var(--red);background:#ffe3e7}
+.timer{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
+.trace{width:260px;height:260px;margin:8px auto;background:
+  linear-gradient(var(--line),var(--line)) center/100% 1.5px no-repeat,
+  linear-gradient(var(--line),var(--line)) center/1.5px 100% no-repeat,#fffdfd;border:2px dashed #f2c2d5;border-radius:16px;touch-action:none}
+
+/* ---------- shop / badges / lexique ---------- */
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.item{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.item .ico{width:64px;height:64px}
+.item .nm{font-weight:800}
+.item .zhn{font-family:var(--zh);color:var(--ink-soft);font-size:14px}
+.item.on{border-color:var(--rose);background:var(--rose-pale)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge{border-radius:18px;padding:12px;border:1.5px dashed var(--line);text-align:center;color:var(--ink-soft)}
+.badge .b{font-family:var(--zh);font-size:30px;width:56px;height:56px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;background:#f6eef2;color:#cdb8c4}
+.badge.got{border-style:solid;color:var(--ink);background:var(--card)}
+.badge.got .b{background:var(--jaune);color:var(--ink)}
+.badge .t{font-weight:800}
+.badge .d{font-size:13px}
+.lex{display:flex;flex-direction:column;gap:6px}
+.lexrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--jaune);border-radius:14px;padding:8px 12px}
+.lexrow.r{border-left-color:var(--rose)}
+.lexrow .h{font-family:var(--zh);font-size:22px;min-width:3.2em}
+.lexrow .p{font-weight:700}
+.lexrow .f{font-size:14px;color:var(--ink-soft)}
+.dots{display:flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:50%;background:#efdfe7}
+.dots i.on{background:var(--mint)}
+input[type=text],input[type=date],select{border:2px solid var(--line);border-radius:12px;padding:10px;font-size:16px;font-family:var(--body);background:var(--card);color:var(--ink)}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;background:rgba(67,51,74,.35);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{background:var(--card);border-radius:24px;padding:20px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-weight:800;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.15);max-width:90vw;text-align:center}
+
+/* ---------- woopy animation ---------- */
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+@keyframes wag{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
+.wbody{filter:drop-shadow(0 0 1.2px #cdb3c1) drop-shadow(0 2px 2px rgba(67,51,74,.08))}
+.w-happy .wbody{animation:bounce .9s ease-in-out infinite}
+.w-oops .wbody{animation:shake .4s ease-in-out 2}
+.wtail{transform-origin:150px 150px;animation:wag 1.1s ease-in-out infinite}
+.w-sad .wtail{animation:none}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand"><span>Woopy</span><small>汪汪老师</small></div>
+    <div class="chips">
+      <span class="chip bone" id="chipBones" title="Os gagnés">🦴 0</span>
+      <span class="chip count" id="chipMaster" title="Mots maîtrisés">✓ 0</span>
+    </div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="nav" aria-label="Navigation">
+  <div class="in">
+    <button data-go="home"><span class="ic">家</span>Accueil</button>
+    <button data-go="setup"><span class="ic">玩</span>Jouer</button>
+    <button data-go="shop"><span class="ic">店</span>Boutique</button>
+    <button data-go="badges"><span class="ic">奖</span>Badges</button>
+    <button data-go="lexique"><span class="ic">词</span>Lexique</button>
+    <button data-go="settings"><span class="ic">设</span>Réglages</button>
+  </div>
+</nav>
+<div id="layer"></div>
+
+<script src="vocab.js"></script>
+<script src="hanzi-writer.min.js"></script>
+<script>
+"use strict";
+/* =================== DATA =================== */
+const VOCAB = VOCAB_RAW.map((r,i)=>({id:r[0],h:r[0],p:r[1],fr:r[2],c:r[3],src:r[4],ex:r[5]||"",parent:r[6]||null}));
+const BYID = Object.fromEntries(VOCAB.map(w=>[w.id,w]));
+let STROKES = null;
+fetch("strokes.json").then(r=>r.json()).then(d=>{STROKES=d}).catch(()=>{STROKES={}});
+
+/* =================== STATE =================== */
+const KEY="woopy_julie_v1";
+const DEF={pseudo:"",bones:0,bonesTotal:0,words:{},owned:[],equip:{head:null,face:null,neck:null,hand:null},badges:{},
+  lastDay:null,days:[],bestChrono:0,traced:0,sessions:0,bestCombo:0,examDate:"",setup:{src:"all",filter:"all",mode:"mix"}};
+let S;
+function load(){try{S=Object.assign(structuredClone(DEF),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){S=structuredClone(DEF)}
+  S.equip=Object.assign({head:null,face:null,neck:null,hand:null},S.equip||{});S.setup=Object.assign({},DEF.setup,S.setup||{});}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+load();
+
+const DAY=86400000;
+const INTERVALS=[0,0.5,1,3,7,14]; // jours, boîte 0..5
+function ws(id){return S.words[id]||(S.words[id]={b:0,t:0,ok:0,ko:0})}
+function mastered(id){return (S.words[id]?.b||0)>=3}
+function countMastered(list){return list.filter(w=>mastered(w.id)).length}
+function todayStr(d=new Date()){return d.toISOString().slice(0,10)}
+function daysSince(dstr){if(!dstr)return 99;return Math.floor((Date.parse(todayStr())-Date.parse(dstr))/DAY)}
+
+/* =================== WOOPY (personnage original) =================== */
+const STAGES=[
+  {min:0,name:"Chiot 小狗",s:.78},
+  {min:25,name:"Petit curieux 小学生",s:.86},
+  {min:70,name:"Grand étudiant 大学生",s:.94},
+  {min:140,name:"Lettré 学者",s:1.0},
+  {min:220,name:"Maître Woopy 汪大师",s:1.04}];
+function stageOf(){const m=countMastered(VOCAB);let st=0;STAGES.forEach((s,i)=>{if(m>=s.min)st=i});return st}
+
+const ITEMS=[
+  {id:"ribbon",slot:"head",name:"Nœud chinois",zh:"中国结",cost:10},
+  {id:"lantern",slot:"hand",name:"Lanterne",zh:"灯笼",cost:15},
+  {id:"scarf",slot:"neck",name:"Écharpe pastel",zh:"围巾",cost:20},
+  {id:"glasses",slot:"face",name:"Lunettes d'étude",zh:"眼镜",cost:25},
+  {id:"bamboo",slot:"hand",name:"Bambou",zh:"竹子",cost:30},
+  {id:"hat",slot:"head",name:"Chapeau conique",zh:"斗笠",cost:35},
+  {id:"noodles",slot:"hand",name:"Bol de nouilles",zh:"面条",cost:40},
+  {id:"phones",slot:"head",name:"Casque audio",zh:"耳机",cost:50},
+  {id:"bowtie",slot:"neck",name:"Nœud papillon",zh:"领结",cost:45},
+  {id:"shades",slot:"face",name:"Lunettes de soleil",zh:"墨镜",cost:60},
+  {id:"robot",slot:"hand",name:"Mini-robot IA",zh:"机器人",cost:80},
+  {id:"crown",slot:"head",name:"Couronne",zh:"皇冠",cost:120}];
+
+const VB={ribbon:"114 32 72 68",hat:"70 15 160 80",phones:"60 25 180 125",crown:"106 14 88 64",glasses:"96 90 108 56",shades:"94 92 112 50",scarf:"84 166 132 76",bowtie:"118 168 64 48",lantern:"206 150 64 92",bamboo:"218 84 58 132",noodles:"100 200 100 90",robot:"212 158 56 80"};
+function itemSVG(id){
+  switch(id){
+    case "ribbon":return `<g transform="translate(150 58)"><path d="M0 0 l-22 -12 v24z" fill="#ff5a7e"/><path d="M0 0 l22 -12 v24z" fill="#ff5a7e"/><circle r="7" fill="#e23d63"/><path d="M-3 6 l-6 22 M3 6 l6 22" stroke="#e23d63" stroke-width="4" stroke-linecap="round"/></g>`;
+    case "hat":return `<g><path d="M78 72 Q150 4 222 72 Q150 86 78 72z" fill="#f2d48a" stroke="#c9a24e" stroke-width="3"/><path d="M110 60 Q150 50 190 60" stroke="#c9a24e" stroke-width="2" fill="none"/><circle cx="150" cy="30" r="5" fill="#ff5a7e"/></g>`;
+    case "phones":return `<g fill="none" stroke="#7fd8be" stroke-width="9" stroke-linecap="round"><path d="M86 112 Q90 36 150 34 Q210 36 214 112"/></g><rect x="70" y="100" width="26" height="40" rx="12" fill="#ff8fb8"/><rect x="204" y="100" width="26" height="40" rx="12" fill="#ff8fb8"/>`;
+    case "crown":return `<g transform="translate(150 44)"><path d="M-34 14 L-30 -18 L-14 0 L0 -24 L14 0 L30 -18 L34 14z" fill="#ffd95a" stroke="#d9a923" stroke-width="3" stroke-linejoin="round"/><circle cx="0" cy="-2" r="5" fill="#ff8fb8"/><circle cx="-20" cy="6" r="3.5" fill="#7fd8be"/><circle cx="20" cy="6" r="3.5" fill="#7fd8be"/></g>`;
+    case "glasses":return `<g fill="rgba(255,255,255,.25)" stroke="#43334a" stroke-width="4"><circle cx="122" cy="118" r="17"/><circle cx="178" cy="118" r="17"/><path d="M139 118 h22" fill="none"/></g>`;
+    case "shades":return `<g><path d="M100 106 h44 q0 26 -22 26 q-22 0 -22 -26z" fill="#43334a"/><path d="M156 106 h44 q0 26 -22 26 q-22 0 -22 -26z" fill="#43334a"/><path d="M144 110 h12" stroke="#43334a" stroke-width="4"/><path d="M108 112 l8 0" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/></g>`;
+    case "scarf":return `<g><path d="M92 178 Q150 206 208 178 L212 194 Q150 222 88 194z" fill="#ffd95a"/><path d="M180 196 l10 40 l-18 -2 z" fill="#ffd95a"/><path d="M100 186 Q150 208 200 186" stroke="#ff8fb8" stroke-width="4" fill="none" stroke-dasharray="6 6"/></g>`;
+    case "bowtie":return `<g transform="translate(150 192)"><path d="M0 0 l-22 -12 v24z" fill="#7fd8be"/><path d="M0 0 l22 -12 v24z" fill="#7fd8be"/><circle r="6" fill="#4fb898"/></g>`;
+    case "lantern":return `<g transform="translate(238 196)"><path d="M0 -40 v10" stroke="#43334a" stroke-width="3"/><ellipse cx="0" cy="-6" rx="20" ry="24" fill="#ff5a7e"/><path d="M-8 -28 Q-14 -6 -8 16 M8 -28 Q14 -6 8 16" stroke="#e23d63" stroke-width="2" fill="none"/><rect x="-10" y="-32" width="20" height="6" rx="2" fill="#ffd95a"/><rect x="-10" y="15" width="20" height="6" rx="2" fill="#ffd95a"/><path d="M0 21 v14" stroke="#ffd95a" stroke-width="3"/></g>`;
+    case "bamboo":return `<g transform="translate(236 150)"><rect x="-6" y="-60" width="12" height="120" rx="5" fill="#8fd47e"/><path d="M-6 -20 h12 M-6 20 h12" stroke="#5fae4f" stroke-width="3"/><path d="M6 -40 q22 -8 30 -24 q-20 4 -30 18z" fill="#8fd47e"/></g>`;
+    case "noodles":return `<g transform="translate(150 262)"><path d="M-42 -14 h84 q-4 34 -42 34 q-38 0 -42 -34z" fill="#ff8fb8"/><path d="M-30 -14 q6 -16 12 0 q6 -16 12 0 q6 -16 12 0 q6 -16 12 0 q6 -16 12 0" stroke="#ffe7a3" stroke-width="5" fill="none"/><path d="M14 -40 l30 34 M24 -44 l26 36" stroke="#a9744d" stroke-width="4" stroke-linecap="round"/></g>`;
+    case "robot":return `<g transform="translate(240 200)"><rect x="-18" y="-22" width="36" height="30" rx="9" fill="#dfe8f3" stroke="#9aaecb" stroke-width="3"/><circle cx="-7" cy="-8" r="4" fill="#7fd8be"/><circle cx="7" cy="-8" r="4" fill="#7fd8be"/><path d="M0 -22 v-10" stroke="#9aaecb" stroke-width="3"/><circle cx="0" cy="-34" r="4" fill="#ff8fb8"/><rect x="-12" y="10" width="24" height="18" rx="6" fill="#dfe8f3" stroke="#9aaecb" stroke-width="3"/></g>`;
+  }
+  return "";
+}
+
+/* Woopy : chiot shih-tzu tout rond et duveteux, oreilles noires en nuage, masque noir autour des yeux, houppette sur la tête */
+function woopySVG(mood="normal",opts={}){
+  const st=opts.stage??stageOf();const sc=STAGES[st].s;
+  const eq=opts.equip??S.equip;
+  const fluff=(cx,cy,r,n,col)=>{let d="";for(let i=0;i<n;i++){const a=i/n*Math.PI*2;d+=`<circle cx="${(cx+Math.cos(a)*r).toFixed(1)}" cy="${(cy+Math.sin(a)*r).toFixed(1)}" r="${(r*0.42).toFixed(1)}" fill="${col}"/>`}return d+`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}"/>`};
+  let eyes,mouth,brows="";
+  if(mood==="happy"){
+    eyes=`<path d="M110 120 q12 -14 24 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M166 120 q12 -14 24 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    mouth=`<path d="M136 152 q14 14 28 0" stroke="#43334a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M143 157 q7 16 14 0z" fill="#ff7aa0"/>`;
+  }else if(mood==="sad"){
+    eyes=`<circle cx="122" cy="122" r="9" fill="#fff"/><circle cx="178" cy="122" r="9" fill="#fff"/><circle cx="122" cy="124" r="5" fill="#43334a"/><circle cx="178" cy="124" r="5" fill="#43334a"/><path d="M128 136 q-4 10 0 14 q4 -4 0 -14z" fill="#9fd7ff"/>`;
+    brows=`<path d="M108 102 l24 6 M192 102 l-24 6" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`;
+    mouth=`<path d="M138 160 q12 -10 24 0" stroke="#43334a" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  }else if(mood==="oops"){
+    eyes=`<path d="M110 122 q12 -10 24 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="178" cy="121" r="10" fill="#fff"/><circle cx="180" cy="122" r="6" fill="#43334a"/><circle cx="182" cy="119" r="2" fill="#fff"/>`;
+    mouth=`<path d="M136 154 q14 6 28 -2" stroke="#43334a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M152 154 q8 18 14 -2z" fill="#ff7aa0"/>`;
+  }else{
+    eyes=`<circle cx="122" cy="121" r="10" fill="#fff"/><circle cx="178" cy="121" r="10" fill="#fff"/><circle cx="123" cy="122" r="6" fill="#43334a"/><circle cx="179" cy="122" r="6" fill="#43334a"/><circle cx="125" cy="119" r="2" fill="#fff"/><circle cx="181" cy="119" r="2" fill="#fff"/>`;
+    mouth=`<path d="M138 152 q6 6 12 0 q6 6 12 0" stroke="#43334a" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  }
+  const earDrop = mood==="sad"?12:0;
+  const head = eq.head?itemSVG(eq.head):"";
+  const face = eq.face?itemSVG(eq.face):"";
+  const neck = eq.neck?itemSVG(eq.neck):"";
+  const hand = eq.hand?itemSVG(eq.hand):"";
+  const cls = mood==="happy"?"w-happy":mood==="oops"?"w-oops":mood==="sad"?"w-sad":"";
+  return `<svg viewBox="0 0 300 300" class="${cls}" role="img" aria-label="Woopy, humeur ${mood}">
+  <g transform="translate(150 290) scale(${sc}) translate(-150 -290)">
+   <ellipse cx="150" cy="286" rx="78" ry="10" fill="#f3dbe5"/>
+   <g class="wbody">
+    <g class="wtail">${fluff(214,212,13,7,"#3b3140")}</g>
+    ${fluff(150,230,52,10,"#fffdfc")}
+    <ellipse cx="118" cy="276" rx="20" ry="11" fill="#fffdfc" stroke="#eadfe4" stroke-width="2"/>
+    <ellipse cx="182" cy="276" rx="20" ry="11" fill="#fffdfc" stroke="#eadfe4" stroke-width="2"/>
+    ${neck}
+    <g transform="translate(0 ${earDrop})">${fluff(84,140,22,8,"#3b3140")}${fluff(216,140,22,8,"#3b3140")}</g>
+    ${fluff(150,122,62,12,"#fffdfc")}
+    ${fluff(150,62,13,7,"#fffdfc")}
+    <ellipse cx="122" cy="121" rx="22" ry="19" fill="#3b3140"/>
+    <ellipse cx="178" cy="121" rx="22" ry="19" fill="#3b3140"/>
+    ${brows}${eyes}
+    <ellipse cx="104" cy="146" rx="10" ry="6" fill="#ffc2d6" opacity=".8"/>
+    <ellipse cx="196" cy="146" rx="10" ry="6" fill="#ffc2d6" opacity=".8"/>
+    <path d="M140 138 q10 -6 20 0 q-4 10 -10 10 q-6 0 -10 -10z" fill="#3b3140"/>
+    ${mouth}${face}${head}${hand}
+   </g>
+  </g></svg>`;
+}
+
+/* =================== WOOPY PARLE =================== */
+const LINES={
+  ok:["太棒了！Même moi j'aurais pas fait mieux 🐾","对！Bon… tu m'impressionnes un peu.","好！Un os de plus pour moi, 谢谢 😋","厉害！Tu triches ou quoi ?","没错！Woof woof !","不错嘛！Ton prof va pleurer de joie.","可以！Continue, je commence à avoir faim."],
+  ko:["哎呀… même un chiot savait celle-là 🙄","不对！Je le dirai pas à ton prof… peut-être.","呜… je retourne mâchouiller ton cahier.","Raté ! 加油，c'était pas si dur.","嗯… t'es sûre ? Parce que moi non.","错了！Note-le dans ton cahier, pas sur mon os.","不是这个！Elle reviendra, celle-là. Prépare-toi."],
+  combo:["连胜！{n} d'affilée, t'as mangé du riz magique ?","哇！{n} bonnes réponses, je remue la queue sans m'arrêter !"],
+  hello:{happy:["你好 {p} ! On remet ça ? J'ai gardé un os pour toi.","今天也加油！Tes mots roses t'attendent, et moi aussi."],normal:["你好 {p}. Hier t'étais là, aujourd'hui aussi j'espère ?","喂，{p} ! Les caractères ne vont pas s'apprendre tout seuls."],sad:["呜呜… {p}, tu m'as oublié ? Ça fait {d} jours…","我好难过… {d} jours sans réviser. Même mon os est triste."]},
+};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* =================== PINYIN =================== */
+const TONE={"ā":["a",1],"á":["a",2],"ǎ":["a",3],"à":["a",4],"ē":["e",1],"é":["e",2],"ě":["e",3],"è":["e",4],"ī":["i",1],"í":["i",2],"ǐ":["i",3],"ì":["i",4],"ō":["o",1],"ó":["o",2],"ǒ":["o",3],"ò":["o",4],"ū":["u",1],"ú":["u",2],"ǔ":["u",3],"ù":["u",4],"ǖ":["v",1],"ǘ":["v",2],"ǚ":["v",3],"ǜ":["v",4],"ü":["v",0]};
+function canon(str){ // -> {l: lettres sans tons, t: suite des tons}
+  str=str.toLowerCase().normalize("NFC").replace(/u:/g,"v");
+  let l="",t=[];
+  for(const ch of str){
+    if(TONE[ch]){l+=TONE[ch][0];if(TONE[ch][1])t.push(TONE[ch][1]);}
+    else if(/[a-z]/.test(ch))l+=ch;
+    else if(/[1-4]/.test(ch))t.push(+ch);
+  }
+  return {l,t:t.join("")};
+}
+function checkPinyin(input,word){
+  const isZh=/[\u3400-\u9fff]/.test(input);
+  if(isZh)return input.replace(/[\s，。？！,.?!]/g,"")===word.h;
+  const u=canon(input);if(!u.l)return false;
+  return word.p.split(" / ").some(alt=>{
+    const c=canon(alt);if(c.l!==u.l)return false;if(c.t===u.t)return true;
+    // tolérance des changements de ton de 一 et 不
+    if(/[一不]/.test(word.h)&&c.t.length===u.t.length){
+      for(let i=0;i<c.t.length;i++){if(c.t[i]!==u.t[i]&&!("124".includes(c.t[i])&&"124".includes(u.t[i])))return false}
+      return true;}
+    return false;});
+}
+function pinyinHint(){return "Tons obligatoires : tape <b>tui1jian4</b> ou <b>tuījiàn</b>, ou bien les caractères."}
+
+/* =================== SÉLECTION DES MOTS =================== */
+function pool(src=S.setup.src,filter=S.setup.filter){
+  let l=VOCAB.filter(w=>src==="all"||w.src.includes(src));
+  if(filter==="rose")l=l.filter(w=>w.c==="r");
+  if(filter==="err")l=l.filter(w=>{const s=S.words[w.id];return s&&s.ko>0&&s.b<3});
+  return l;
+}
+function weight(w){
+  const s=ws(w.id);const due=Date.now()-s.t>=INTERVALS[s.b]*DAY;
+  return (due?3:0.6)*(6-s.b)*(w.c==="r"?2.2:1)*(s.ko>s.ok?1.5:1);
+}
+let recent=[];
+function pickWord(list,filterFn){
+  let cand=list.filter(w=>!recent.includes(w.id)&&(!filterFn||filterFn(w)));
+  if(!cand.length)cand=list.filter(w=>!filterFn||filterFn(w));
+  if(!cand.length)cand=list;
+  let tot=cand.reduce((a,w)=>a+weight(w),0),r=Math.random()*tot;
+  for(const w of cand){r-=weight(w);if(r<=0){recent.push(w.id);if(recent.length>Math.min(6,Math.floor(list.length/2)))recent.shift();return w}}
+  return cand[0];
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function distractors(w,key,n=3){
+  const seen=new Set([w[key]]);const sameLen=shuffle(VOCAB.filter(x=>x.id!==w.id&&!x.parent&&x[key]!==w[key]&&[...x.h].length===[...w.h].length));
+  const other=shuffle(VOCAB.filter(x=>x.id!==w.id&&x[key]!==w[key]));
+  const out=[];for(const x of [...sameLen,...other]){if(out.length>=n)break;if(!seen.has(x[key])){seen.add(x[key]);out.push(x)}}
+  return out;
+}
+
+/* =================== SRS & RÉCOMPENSES =================== */
+function grade(w,ok){
+  const s=ws(w.id);const wasMastered=s.b>=3;
+  if(ok){s.ok++;s.b=Math.min(5,s.b+1)}else{s.ko++;s.b=Math.max(0,s.b-2)}
+  s.t=Date.now();
+  markDay();save();
+  if(!wasMastered&&s.b>=3)checkStageUp();
+}
+let lastStage=stageOf();
+function checkStageUp(){const st=stageOf();if(st>lastStage){lastStage=st;setTimeout(()=>modal(`<div class="woopywrap" style="margin:0 auto">${woopySVG("happy")}</div><h2>Woopy a grandi !</h2><p>Il devient <b>${STAGES[st].name}</b>.<br><span class="zh">长大了！</span> Bon, ne prends pas la grosse tête pour autant.</p><button class="btn wide" data-close>汪！Trop bien</button>`),500)}}
+function addBones(n){S.bones+=n;S.bonesTotal+=n;save();updChips()}
+function markDay(){const t=todayStr();if(S.lastDay!==t){S.lastDay=t;if(!S.days.includes(t))S.days.push(t);if(S.days.length>400)S.days=S.days.slice(-400)}}
+function streak(){let n=0;let d=new Date();while(S.days.includes(todayStr(d))){n++;d=new Date(d.getTime()-DAY)}return n}
+function mood(){if(!S.lastDay)return "happy";const d=daysSince(S.lastDay);return d===0?"happy":d===1?"normal":d>=2?"sad":"normal"}
+
+const BADGES=[
+  {id:"first",zh:"始",t:"Premier pas",d:"Finir une première partie",ok:()=>S.sessions>=1},
+  {id:"combo10",zh:"连",t:"Enchaînement",d:"10 bonnes réponses d'affilée",ok:()=>S.bestCombo>=10},
+  {id:"combo25",zh:"龙",t:"Dragon",d:"25 bonnes réponses d'affilée",ok:()=>S.bestCombo>=25},
+  {id:"m50",zh:"五十",t:"Cinquante",d:"50 mots maîtrisés",ok:()=>countMastered(VOCAB)>=50},
+  {id:"m150",zh:"百",t:"Centurion",d:"150 mots maîtrisés",ok:()=>countMastered(VOCAB)>=150},
+  {id:"rose",zh:"粉",t:"Tout le rose",d:"Tous les mots roses maîtrisés",ok:()=>countMastered(VOCAB.filter(w=>w.c==="r"))===VOCAB.filter(w=>w.c==="r").length},
+  {id:"L",zh:"李",t:"Ami de Li Ming",d:"Toute la fiche Li Ming maîtrisée",ok:()=>fullSrc("L")},
+  {id:"Q",zh:"问",t:"Sondeur",d:"Tout le questionnaire maîtrisé",ok:()=>fullSrc("Q")},
+  {id:"D",zh:"论",t:"Débatteur",d:"Toute la discussion maîtrisée",ok:()=>fullSrc("D")},
+  {id:"A",zh:"文",t:"Lecteur d'articles",d:"Tout l'article maîtrisé",ok:()=>fullSrc("A")},
+  {id:"chrono15",zh:"快",t:"Rapide",d:"15 points en course contre la montre",ok:()=>S.bestChrono>=15},
+  {id:"chrono25",zh:"闪",t:"Éclair",d:"25 points en course contre la montre",ok:()=>S.bestChrono>=25},
+  {id:"trace10",zh:"笔",t:"Calligraphe",d:"Tracer 10 caractères",ok:()=>S.traced>=10},
+  {id:"streak3",zh:"三",t:"Trois jours",d:"Réviser 3 jours de suite",ok:()=>streak()>=3},
+  {id:"streak7",zh:"七",t:"Une semaine",d:"Réviser 7 jours de suite",ok:()=>streak()>=7},
+  {id:"perfect",zh:"完",t:"Sans faute",d:"15 questions sans perdre de vie",ok:()=>S.perfect},
+  {id:"bones200",zh:"骨",t:"Collection d'os",d:"Gagner 200 os au total",ok:()=>S.bonesTotal>=200},
+  {id:"fashion",zh:"美",t:"Woopy stylé",d:"Avoir 3 accessoires",ok:()=>S.owned.length>=3},
+];
+function fullSrc(k){const l=VOCAB.filter(w=>w.src.includes(k));return l.length&&countMastered(l)===l.length}
+function checkBadges(){let n=[];BADGES.forEach(b=>{if(!S.badges[b.id]&&b.ok()){S.badges[b.id]=todayStr();n.push(b)}});if(n.length){save();n.forEach((b,i)=>setTimeout(()=>toast(`Badge débloqué : ${b.t} ${b.zh}`),400+i*1600))}}
+
+/* =================== UI HELPERS =================== */
+const $=s=>document.querySelector(s);
+const view=$("#view");
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function modal(html,onClose){const l=$("#layer");l.innerHTML=`<div class="overlay"><div class="modal">${html}</div></div>`;l.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{l.innerHTML="";onClose&&onClose()});}
+function updChips(){$("#chipBones").textContent=`🦴 ${S.bones}`;$("#chipMaster").textContent=`✓ ${countMastered(VOCAB)}/${VOCAB.length}`}
+function nav(v){document.querySelectorAll(".nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.go===v?"true":"false"))}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.go));
+let game=null;
+function go(v){if(game&&game.timer)clearInterval(game.timer);if(game&&game.writer){try{game.writer.cancelQuiz()}catch(e){}}game=null;nav(v);updChips();window.scrollTo(0,0);
+  ({home,setup,shop,badges,lexique,settings})[v]();}
+
+/* =================== ACCUEIL =================== */
+function home(){
+  const m=mood();const d=daysSince(S.lastDay);const st=stageOf();
+  const roses=VOCAB.filter(w=>w.c==="r"),jaunes=VOCAB.filter(w=>w.c==="j");
+  const next=STAGES[st+1];const mm=countMastered(VOCAB);
+  let cd="";
+  if(S.examDate){const n=Math.ceil((Date.parse(S.examDate)-Date.parse(todayStr()))/DAY);
+    cd=n>=0?`<div class="countdown"><div class="n">${n}</div><div><b>${n===0?"C'est aujourd'hui !":n===1?"jour avant le contrôle":"jours avant le contrôle"}</b><div class="muted">${countMastered(roses)}/${roses.length} mots roses maîtrisés · 考试加油！</div></div></div>`:"";}
+  else cd=`<div class="countdown"><div class="n">?</div><div><b>Date du contrôle pas encore fixée</b><div class="muted">Ajoute-la dans Réglages pour voir le compte à rebours.</div></div></div>`;
+  const hello=(!S.lastDay?"你好 {p} ! Moi c'est Woopy. On commence par les mots roses ? Je te préviens, je note tout.":pick(LINES.hello[m])).replace("{p}",esc(S.pseudo||"toi")).replace("{d}",d>90?"plein de":d);
+  view.innerHTML=`
+  <section class="card hero">
+    <div class="woopywrap">${woopySVG(m)}</div>
+    <div class="stat">
+      <div class="bubble">${hello.replace(/([\u3400-\u9fff！，…？]+)/g,'<span class="zh">$1</span>')}</div>
+      <div class="stage">${STAGES[st].name}${next?` · encore ${next.min-mm} mots maîtrisés pour grandir`:" · niveau max !"}</div>
+      <div class="bar m"><i style="width:${next?Math.round((mm-STAGES[st].min)/(next.min-STAGES[st].min)*100):100}%"></i></div>
+      <button class="btn wide" id="playNow">Réviser maintenant</button>
+    </div>
+  </section>
+  <div style="height:12px"></div>
+  ${cd}
+  <div style="height:12px"></div>
+  <section class="grid2">
+    <div class="card stat"><div class="row" style="justify-content:space-between"><b>Mots roses</b><span class="tag r">à connaître absolument</span></div>
+      <div class="bar"><i style="width:${Math.round(countMastered(roses)/roses.length*100)}%"></i></div><span class="muted"><b>${countMastered(roses)}</b> / ${roses.length} maîtrisés</span></div>
+    <div class="card stat"><div class="row" style="justify-content:space-between"><b>Mots jaunes</b><span class="tag j">à consolider</span></div>
+      <div class="bar y"><i style="width:${Math.round(countMastered(jaunes)/jaunes.length*100)}%"></i></div><span class="muted"><b>${countMastered(jaunes)}</b> / ${jaunes.length} maîtrisés</span></div>
+  </section>
+  <div style="height:12px"></div>
+  <section class="card">
+    <h3 style="margin-bottom:8px">Par fiche</h3>
+    <div class="lex">${Object.entries(SOURCES).map(([k,n])=>{const l=VOCAB.filter(w=>w.src.includes(k));const c=countMastered(l);return `<div class="stat"><div class="row" style="justify-content:space-between"><span>${n}</span><span class="muted" style="font-variant-numeric:tabular-nums">${c}/${l.length}</span></div><div class="bar m"><i style="width:${Math.round(c/l.length*100)}%"></i></div></div>`}).join("")}</div>
+  </section>
+  <div style="height:12px"></div>
+  <section class="row muted" style="justify-content:center;font-weight:700">
+    <span>Série : ${streak()} jour${streak()>1?"s":""}</span>·<span>Badges : ${Object.keys(S.badges).length}/${BADGES.length}</span>·<span>À revoir : ${VOCAB.filter(w=>{const s=S.words[w.id];return s&&s.ko>0&&s.b<3}).length}</span>
+  </section>`;
+  $("#playNow").onclick=()=>go("setup");
+}
+
+/* =================== CHOIX DE PARTIE =================== */
+const MODES=[["mix","Mélange"],["qcm","QCM"],["flash","Flashcards"],["type","Écrire"],["trous","Phrases à trous"],["pairs","Paires"],["chrono","Chrono 60 s"],["trace","Tracer 写字"]];
+function setup(){
+  const st=S.setup;
+  const seg=(name,opts,cur,cls="")=>`<div class="seg ${cls}" data-seg="${name}">${opts.map(([v,l])=>`<button aria-pressed="${v===cur}" data-v="${v}">${l}</button>`).join("")}</div>`;
+  view.innerHTML=`
+  <section class="card" style="display:flex;flex-direction:column;gap:14px">
+    <h2>Nouvelle partie</h2>
+    <div><p class="label">Fiche</p>${seg("src",[["all","Tout mélangé"],["L","Texte Li Ming"],["Q","Questionnaire"],["D","Discussion"],["A","Article 利与弊"]],st.src)}</div>
+    <div><p class="label">Mots</p>${seg("filter",[["all","Rose + jaune"],["rose","Rose seul"],["err","Mes erreurs"]],st.filter,"y")}</div>
+    <div><p class="label">Exercice</p>${seg("mode",MODES,st.mode)}</div>
+    <p class="muted" id="poolInfo"></p>
+    <button class="btn wide" id="start">C'est parti ! 开始</button>
+  </section>`;
+  const info=()=>{const l=pool();const s=$("#poolInfo");
+    if(st.mode==="trace"){const n=traceChars().length;s.textContent=n?`${n} caractères roses à tracer.`:"Aucun caractère rose dans cette sélection.";$("#start").disabled=!n;return}
+    s.textContent=l.length?`${l.length} mots dans la sélection (${l.filter(w=>w.c==="r").length} roses). Les vies : 3 cœurs, la partie dure tant que tu veux.`:"Aucun mot ici pour l'instant. Pour « Mes erreurs », il faut d'abord te tromper 😏";
+    $("#start").disabled=l.length<4;};
+  view.querySelectorAll("[data-seg]").forEach(g=>g.querySelectorAll("button").forEach(b=>b.onclick=()=>{st[g.dataset.seg]=b.dataset.v;save();g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));info()}));
+  info();
+  $("#start").onclick=()=>startGame();
+}
+
+/* =================== MOTEUR DE JEU =================== */
+function startGame(){
+  const mode=S.setup.mode;recent=[];
+  game={mode,list:pool(),lives:3,combo:0,n:0,ok:0,bones:0,missed:new Set(),lostLife:false};
+  if(mode==="chrono")return chrono();
+  if(mode==="trace")return trace();
+  nextQ();
+}
+function gameBar(extra=""){
+  return `<div class="gamebar"><button class="btn ghost" id="quit" style="padding:8px 12px;font-size:15px">Terminer</button>
+  <div class="row" style="gap:12px"><span class="chip">${game.n} q.</span>${game.combo>=3?`<span class="chip count">连 ×${game.combo}</span>`:""}${extra}</div>
+  <span class="hearts" aria-label="${game.lives} vies">${"❤️".repeat(game.lives)}${"🤍".repeat(Math.max(0,3-game.lives))}</span></div>`;
+}
+function bindQuit(){$("#quit").onclick=()=>endGame()}
+function nextQ(){
+  if(game.lives<=0)return endGame();
+  let m=game.mode;
+  if(m==="mix"){const r=Math.random();m=r<.42?"qcm":r<.64?"type":r<.84?"trous":r<.93?"pairs":"flash"}
+  if(m==="trous"&&!game.list.some(w=>w.ex))m="qcm";
+  if(m==="pairs"&&game.list.length<5)m="qcm";
+  ({qcm:qQCM,type:qType,trous:qTrous,pairs:qPairs,flash:qFlash})[m]();
+}
+function afterAnswer(w,ok,{noLife=false,lead=""}={}){
+  grade(w,ok);game.n++;
+  if(ok){game.ok++;game.combo++;let b=1;if(game.combo%5===0)b+=2;game.bones+=b;addBones(b);if(game.combo>S.bestCombo){S.bestCombo=game.combo;save()}}
+  else{game.combo=0;game.missed.add(w.id);if(!noLife){game.lives--;game.lostLife=true}}
+  if(!game.lostLife&&game.n>=15&&!S.perfect){S.perfect=true;save()}
+  let say=ok?pick(LINES.ok):pick(LINES.ko);
+  if(ok&&game.combo>=5&&game.combo%5===0)say=pick(LINES.combo).replace("{n}",game.combo);
+  const fb=document.createElement("div");fb.className=`feedback ${ok?"ok":"ko"}`;
+  fb.innerHTML=`<div class="mini">${woopySVG(ok?"happy":"oops")}</div><div><div class="say">${esc(say)}</div>
+    <div class="word">${esc(w.h)} <span style="font-family:var(--body);font-size:17px">${esc(w.p)}</span> <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+    <div>${esc(w.fr)}</div>${w.ex?`<div class="ex">${esc(w.ex)}</div>`:w.parent?`<div class="ex">dans ${esc(w.parent)}</div>`:""}
+    ${lead}<button class="btn ${ok?"mint":""} wide" id="next" style="margin-top:8px">${game.lives<=0?"Voir le bilan":"Suivant"}</button></div>`;
+  $(".qcard").appendChild(fb);
+  $(".hearts").innerHTML="❤️".repeat(game.lives)+"🤍".repeat(Math.max(0,3-game.lives));
+  const nb=$("#next");nb.focus({preventScroll:true});fb.scrollIntoView({block:"nearest",behavior:"smooth"});
+  nb.onclick=()=>nextQ();
+}
+const DIRS=[["zh2fr","Que veut dire…"],["fr2zh","Comment dit-on…"],["zh2py","Quel est le pinyin de…"],["py2zh","Quel caractère pour…"]];
+function qQCM(){
+  const w=pickWord(game.list);
+  const [dir,label]=pick(DIRS);
+  let prompt,key,cls="";
+  if(dir==="zh2fr"){prompt=`<div class="big">${esc(w.h)}</div>`;key="fr"}
+  if(dir==="fr2zh"){prompt=`<div class="big fr">${esc(w.fr)}</div>`;key="h";cls="zh"}
+  if(dir==="zh2py"){prompt=`<div class="big">${esc(w.h)}</div>`;key="p"}
+  if(dir==="py2zh"){prompt=`<div class="big py">${esc(w.p)}</div>`;key="h";cls="zh"}
+  const opts=shuffle([w,...distractors(w,key)]);
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${label} <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>${prompt}
+    <div class="opts">${opts.map((o,i)=>`<button class="opt ${cls}" data-i="${i}">${esc(o[key])}</button>`).join("")}</div></section>`;
+  bindQuit();
+  view.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const o=opts[+b.dataset.i];const ok=o.id===w.id||o[key]===w[key];
+    view.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(opts[+x.dataset.i][key]===w[key])x.classList.add("ok")});
+    if(!ok)b.classList.add("ko");
+    afterAnswer(w,ok);
+  });
+}
+function qType(){
+  const w=pickWord(game.list);const fromFr=Math.random()<.45;
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${fromFr?"Écris en chinois (pinyin avec tons ou caractères)":"Écris le pinyin avec les tons"} <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+    ${fromFr?`<div class="big fr">${esc(w.fr)}</div>`:`<div class="big">${esc(w.h)}</div>`}
+    <form class="answer" id="f"><input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. tui1jian4" aria-label="Ta réponse"><button class="btn">OK</button></form>
+    <div class="hint">${pinyinHint()}</div></section>`;
+  bindQuit();const inp=$("#ans");inp.focus();
+  $("#f").onsubmit=e=>{e.preventDefault();if(!inp.value.trim())return;inp.disabled=true;$("#f button").disabled=true;
+    const ok=checkPinyin(inp.value,w);inp.style.borderColor=ok?"var(--mint)":"var(--red)";afterAnswer(w,ok,{lead:ok?"":`<div class="muted">Tu as écrit : ${esc(inp.value)}</div>`})};
+}
+function qTrous(){
+  const w=pickWord(game.list,x=>!!x.ex);
+  const parts=w.ex.split(w.h);const sent=esc(parts[0])+'<span class="gap">？</span>'+esc(parts.slice(1).join(w.h));
+  const opts=shuffle([w,...distractors(w,"h")]);
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Complète la phrase du cours <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+    <div class="sentence">${sent}</div><div class="muted">Indice : « ${esc(w.fr)} »</div>
+    <div class="opts">${opts.map((o,i)=>`<button class="opt zh" data-i="${i}">${esc(o.h)}</button>`).join("")}</div></section>`;
+  bindQuit();
+  view.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const o=opts[+b.dataset.i];const ok=o.h===w.h;
+    view.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(opts[+x.dataset.i].h===w.h)x.classList.add("ok")});if(!ok)b.classList.add("ko");
+    $(".gap").textContent=w.h;afterAnswer(w,ok)});
+}
+function qFlash(){
+  const w=pickWord(game.list);const zhFront=Math.random()<.6;
+  const front=zhFront?`<div class="big">${esc(w.h)}</div>`:`<div class="big fr">${esc(w.fr)}</div>`;
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Flashcard · touche pour retourner <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+   <div class="flash" id="fc"><div class="inner"><div class="face">${front}</div>
+   <div class="face back"><div class="big" style="font-size:44px">${esc(w.h)}</div><div style="font-weight:800;font-size:22px">${esc(w.p)}</div><div>${esc(w.fr)}</div>${w.ex?`<div class="zh muted" style="font-size:15px">${esc(w.ex)}</div>`:""}</div></div></div>
+   <div class="row" id="fb" style="justify-content:center;margin-top:10px"><button class="btn alt" id="flip">Retourner</button></div></section>`;
+  bindQuit();
+  const flip=()=>{$("#fc").classList.add("flipped");$("#fb").innerHTML=`<button class="btn ghost" id="no">Pas encore 不会</button><button class="btn mint" id="yes">Je savais 会了</button>`;
+    $("#no").onclick=()=>{$("#fb").remove();afterAnswer(w,false,{noLife:true})};$("#yes").onclick=()=>{$("#fb").remove();afterAnswer(w,true)}};
+  $("#fc").onclick=flip;$("#flip").onclick=flip;
+}
+function qPairs(){
+  const ws5=[];const tmp=game.list.slice();while(ws5.length<5&&tmp.length){const w=pickWord(tmp);if(!ws5.some(x=>x.fr===w.fr||x.h===w.h))ws5.push(w);tmp.splice(tmp.indexOf(w),1)}
+  const left=shuffle(ws5),right=shuffle(ws5);let sel=null,done=0,errs=0;
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Relie chaque caractère à sa traduction</div>
+    <div class="pairs"><div class="col">${left.map(w=>`<button class="zh" data-l="${esc(w.id)}">${esc(w.h)}</button>`).join("")}</div>
+    <div class="col">${right.map(w=>`<button data-r="${esc(w.id)}">${esc(w.fr)}</button>`).join("")}</div></div></section>`;
+  bindQuit();
+  view.querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>{
+    if(b.dataset.l){view.querySelectorAll("[data-l]").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sel=b.dataset.l;return}
+    if(!sel)return toast("Choisis d'abord un caractère à gauche");
+    const L=view.querySelector(`[data-l="${CSS.escape(sel)}"]`);
+    if(b.dataset.r===sel){grade(BYID[sel],true);game.ok++;game.n++;game.combo++;addBones(1);game.bones++;if(game.combo>S.bestCombo){S.bestCombo=game.combo;save()}L.classList.add("done");b.classList.add("done");sel=null;done++;
+      if(done===5){const w=ws5[0];const qc=$(".qcard");const fb=document.createElement("div");fb.className="feedback ok";
+        fb.innerHTML=`<div class="mini">${woopySVG("happy")}</div><div><div class="say">${errs?`配对完成！${errs} erreur${errs>1?"s":""}, ça passe… de justesse.`:"完美！5 paires sans faute, je suis presque jaloux."}</div><button class="btn mint wide" id="next" style="margin-top:8px">Suivant</button></div>`;qc.appendChild(fb);$("#next").onclick=()=>nextQ();$("#next").focus({preventScroll:true});}}
+    else{errs++;grade(BYID[sel],false);game.missed.add(sel);game.combo=0;game.lives--;game.lostLife=true;b.classList.add("ko");L.classList.add("ko");setTimeout(()=>{b.classList.remove("ko");L.classList.remove("ko")},500);
+      $(".hearts").innerHTML="❤️".repeat(Math.max(0,game.lives))+"🤍".repeat(Math.max(0,3-game.lives));toast(pick(LINES.ko));if(game.lives<=0)setTimeout(endGame,700)}
+  });
+}
+function chrono(){
+  let t=60,score=0;const list=game.list;
+  const draw=()=>{const w=pickWord(list);const zh=Math.random()<.5;const key=zh?"fr":"h";const opts=shuffle([w,...distractors(w,key)]);
+    $("#cq").innerHTML=`<div class="big ${zh?"":"fr"}">${esc(zh?w.h:w.fr)}</div><div class="opts">${opts.map((o,i)=>`<button class="opt ${zh?"":"zh"}" data-i="${i}">${esc(o[key])}</button>`).join("")}</div>`;
+    $("#cq").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const ok=opts[+b.dataset.i][key]===w[key];grade(w,ok);game.n++;
+      if(ok){score++;game.ok++;game.bones++;addBones(1)}else{game.missed.add(w.id);t=Math.max(0,t-3)}
+      b.classList.add(ok?"ok":"ko");$("#sc").textContent=score;setTimeout(draw,ok?150:350)})};
+  view.innerHTML=`<div class="gamebar"><button class="btn ghost" id="quit" style="padding:8px 12px;font-size:15px">Terminer</button><span class="timer" id="tm">60</span><span class="chip count">Score <b id="sc" style="margin-left:4px">0</b></span></div>
+    <section class="qcard"><div class="prompt-kind">Course contre la montre · une erreur = −3 s</div><div id="cq"></div></section>`;
+  bindQuit();draw();
+  game.timer=setInterval(()=>{t--;$("#tm").textContent=Math.max(0,t);if(t<=0){clearInterval(game.timer);game.timer=null;game.chronoScore=score;if(score>S.bestChrono){S.bestChrono=score;save()}endGame()}},1000);
+}
+function traceChars(){const set=[];pool().filter(w=>w.c==="r").forEach(w=>[...w.h].forEach(c=>{if(!set.includes(c))set.push(c)}));return set}
+function trace(){
+  const chars=traceChars();if(!chars.length)return go("setup");
+  const c=pick(chars);const w=VOCAB.find(x=>x.c==="r"&&x.h.includes(c)&&!x.parent)||VOCAB.find(x=>x.h.includes(c));
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Bonus · trace le caractère dans le bon ordre</div>
+    <div class="row" style="justify-content:center"><b class="zh" style="font-size:22px">${esc(w.h)}</b><span style="font-weight:800">${esc(w.p)}</span><span class="muted">${esc(w.fr)}</span></div>
+    <div id="tw" class="trace"></div><div class="hint">Le trait correct s'affiche après 3 essais ratés. Touche « Voir » pour l'animation.</div>
+    <div class="row" style="justify-content:center;margin-top:8px"><button class="btn ghost" id="anim">Voir l'ordre des traits</button><button class="btn alt" id="skip">Autre caractère</button></div></section>`;
+  bindQuit();$("#skip").onclick=()=>trace();
+  const make=()=>{if(!STROKES)return setTimeout(make,200);
+    if(!STROKES[c]){$("#tw").innerHTML=`<div class="big" style="padding-top:60px">${esc(c)}</div>`;return}
+    const writer=HanziWriter.create("tw",c,{width:256,height:256,padding:16,showCharacter:false,showOutline:true,strokeColor:"#43334a",outlineColor:"#f3d6e2",drawingColor:"#ff6f9f",highlightColor:"#7fd8be",drawingWidth:22,showHintAfterMisses:3,charDataLoader:(ch,done)=>done(STROKES[ch])});
+    game.writer=writer;
+    const quiz=()=>writer.quiz({onComplete:({totalMistakes})=>{S.traced++;game.n++;game.ok++;const b=totalMistakes<=2?3:1;game.bones+=b;addBones(b);markDay();save();
+      const fb=document.createElement("div");fb.className="feedback ok";fb.innerHTML=`<div class="mini">${woopySVG("happy")}</div><div><div class="say">${totalMistakes===0?"写得真好！Pas une rature, calligraphe va.":totalMistakes<=2?`不错！${totalMistakes} petite${totalMistakes>1?"s":""} erreur${totalMistakes>1?"s":""}, je ferme les yeux.`:`嗯… ${totalMistakes} erreurs. Le pinceau t'en veut ?`} +${b} 🦴</div><button class="btn mint wide" id="next" style="margin-top:8px">Caractère suivant</button></div>`;
+      $(".qcard").appendChild(fb);$("#next").onclick=()=>trace();}});
+    quiz();
+    $("#anim").onclick=()=>{writer.cancelQuiz();writer.showCharacter();writer.animateCharacter({onComplete:()=>{setTimeout(()=>{writer.hideCharacter();quiz()},500)}})};
+  };make();
+}
+function endGame(){
+  if(game&&game.timer){clearInterval(game.timer);game.timer=null}
+  if(!game)return go("home");
+  if(game.writer){try{game.writer.cancelQuiz()}catch(e){}}
+  const g=game;game=null;
+  if(g.n>0){S.sessions++;markDay();save()}
+  checkBadges();updChips();
+  const pct=g.n?Math.round(g.ok/g.n*100):0;const good=pct>=80;
+  const missed=[...g.missed].map(id=>BYID[id]).filter(Boolean);
+  const msg=g.chronoScore!=null?`时间到！${g.chronoScore} points. ${g.chronoScore>=S.bestChrono&&g.chronoScore>0?"Nouveau record, je l'accroche au frigo.":`Ton record : ${S.bestChrono}. Tu peux mieux, je le sens.`}`
+    :g.n===0?"Déjà fini ? Je n'ai même pas eu le temps de remuer la queue.":good?"太厉害了！Tu vas finir par en savoir plus que moi.":g.lives<=0?"没有命了！Plus de vies… On reprend, 再来一次 ?":"还可以！Pas mal, mais les mots ratés vont revenir te hanter.";
+  view.innerHTML=`<section class="card" style="text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center">
+    <div class="woopywrap">${woopySVG(good||g.chronoScore>=15?"happy":g.n?"oops":"normal")}</div>
+    <h2>Bilan de la partie</h2><div class="bubble">${esc(msg)}</div>
+    <div class="row" style="justify-content:center"><span class="chip">${g.ok}/${g.n} bonnes réponses</span><span class="chip bone">+${g.bones} 🦴</span></div>
+    ${missed.length?`<div style="width:100%;text-align:left"><p class="label">À revoir</p><div class="lex">${missed.map(lexRow).join("")}</div></div>`:""}
+    <div class="row" style="justify-content:center"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="home">Accueil</button></div></section>`;
+  $("#again").onclick=()=>startGame();$("#home").onclick=()=>go("home");
+}
+
+/* =================== BOUTIQUE =================== */
+function shop(){
+  view.innerHTML=`<section style="display:flex;flex-direction:column;gap:12px">
+   <div class="card hero"><div class="woopywrap">${woopySVG("normal")}</div><div class="stat"><h2>La boutique de Woopy</h2>
+   <p class="muted" style="margin:0">Dépense tes os pour habiller Woopy. Une bonne réponse = 1 os, et +2 tous les 5 d'affilée. Touche un accessoire déjà acheté pour le mettre ou l'enlever.</p></div></div>
+   <div class="shop">${ITEMS.map(it=>{const own=S.owned.includes(it.id);const on=S.equip[it.slot]===it.id;
+     return `<div class="item ${on?"on":""}"><svg class="ico" viewBox="${VB[it.id]}">${itemSVG(it.id)}</svg><div class="nm">${it.name}</div><div class="zhn">${it.zh}</div>
+     <button class="btn ${own?"ghost":"alt"}" data-it="${it.id}" style="padding:8px 12px;font-size:15px" ${!own&&S.bones<it.cost?"disabled":""}>${own?(on?"Enlever":"Mettre"):`${it.cost} 🦴`}</button></div>`}).join("")}</div></section>`;
+  view.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>{const it=ITEMS.find(x=>x.id===b.dataset.it);
+    if(!S.owned.includes(it.id)){if(S.bones<it.cost)return;S.bones-=it.cost;S.owned.push(it.id);S.equip[it.slot]=it.id;toast(`${it.zh} ! Woopy se trouve très beau.`)}
+    else S.equip[it.slot]=S.equip[it.slot]===it.id?null:it.id;
+    save();checkBadges();updChips();shop()});
+}
+
+/* =================== BADGES =================== */
+function badges(){
+  view.innerHTML=`<section style="display:flex;flex-direction:column;gap:12px"><h2>Badges ${Object.keys(S.badges).length}/${BADGES.length}</h2>
+  <div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?"got":""}"><div class="b">${b.zh}</div><div class="t">${b.t}</div><div class="d">${b.d}</div></div>`).join("")}</div></section>`;
+}
+
+/* =================== LEXIQUE =================== */
+function lexRow(w){const b=S.words[w.id]?.b||0;return `<div class="lexrow ${w.c}"><span class="h">${esc(w.h)}</span><div><div class="p">${esc(w.p)}</div><div class="f">${esc(w.fr)}</div></div><div class="dots" title="Niveau ${b}/5">${[1,2,3,4,5].map(i=>`<i class="${b>=i?"on":""}"></i>`).join("")}</div></div>`}
+let lexF={src:"all",c:"all",q:""};
+function lexique(){
+  view.innerHTML=`<section style="display:flex;flex-direction:column;gap:12px"><h2>Lexique · ${VOCAB.length} mots</h2>
+   <div class="row"><select id="ls" aria-label="Fiche"><option value="all">Toutes les fiches</option>${Object.entries(SOURCES).map(([k,n])=>`<option value="${k}">${n}</option>`).join("")}</select>
+   <select id="lc" aria-label="Couleur"><option value="all">Rose + jaune</option><option value="r">Rose</option><option value="j">Jaune</option></select>
+   <input id="lq" type="text" placeholder="Chercher…" aria-label="Chercher" style="flex:1;min-width:140px"></div>
+   <div class="lex" id="ll"></div></section>`;
+  $("#ls").value=lexF.src;$("#lc").value=lexF.c;$("#lq").value=lexF.q;
+  const draw=()=>{const q=lexF.q.trim().toLowerCase();const l=VOCAB.filter(w=>(lexF.src==="all"||w.src.includes(lexF.src))&&(lexF.c==="all"||w.c===lexF.c)&&(!q||w.h.includes(q)||w.fr.toLowerCase().includes(q)||canon(w.p).l.includes(canon(q).l)));
+    $("#ll").innerHTML=l.map(lexRow).join("")||`<p class="muted">Rien trouvé.</p>`};
+  $("#ls").onchange=e=>{lexF.src=e.target.value;draw()};$("#lc").onchange=e=>{lexF.c=e.target.value;draw()};$("#lq").oninput=e=>{lexF.q=e.target.value;draw()};draw();
+}
+
+/* =================== RÉGLAGES =================== */
+function settings(){
+  view.innerHTML=`<section class="card" style="display:flex;flex-direction:column;gap:14px">
+   <h2>Réglages</h2>
+   <label for="sp"><span class="label">Pseudo</span></label><input id="sp" type="text" maxlength="20" value="${esc(S.pseudo)}">
+   <label for="sd"><span class="label">Date du contrôle écrit</span></label><input id="sd" type="date" value="${esc(S.examDate)}">
+   <button class="btn" id="ss">Enregistrer</button>
+   <p class="muted" style="margin:0">La progression est gardée dans ce navigateur, sur cet appareil.</p>
+   <button class="btn ghost" id="reset">Tout remettre à zéro</button></section>`;
+  $("#ss").onclick=()=>{S.pseudo=$("#sp").value.trim()||S.pseudo;S.examDate=$("#sd").value;save();toast("C'est noté 好的！");go("home")};
+  $("#reset").onclick=()=>modal(`<h2>Tout effacer ?</h2><p>Os, accessoires, badges et progression seront perdus. Woopy redevient un chiot.</p><div class="row" style="justify-content:center"><button class="btn ghost" data-close>Annuler</button><button class="btn" id="doreset">Effacer</button></div>`);
+  document.addEventListener("click",function h(e){if(e.target.id==="doreset"){document.removeEventListener("click",h);S=structuredClone(DEF);save();$("#layer").innerHTML="";lastStage=0;go("home");askPseudo()}});
+}
+function askPseudo(){
+  modal(`<div class="woopywrap" style="margin:0 auto">${woopySVG("happy",{equip:{}})}</div><h2>你好！Moi c'est Woopy 汪汪</h2><p style="margin:0">Je vais t'aider à apprendre tout le vocabulaire de ton cours sur l'IA. Les mots <span class="tag r">roses</span> d'abord, évidemment.<br>Tu t'appelles comment ?</p>
+   <input id="pp" type="text" maxlength="20" placeholder="Ton pseudo" aria-label="Ton pseudo"><button class="btn wide" id="pok">C'est moi !</button>`);
+  const ok=()=>{const v=$("#pp").value.trim();if(!v)return;S.pseudo=v;save();$("#layer").innerHTML="";go("home")};
+  $("#pok").onclick=ok;$("#pp").onkeydown=e=>{if(e.key==="Enter")ok()};setTimeout(()=>$("#pp").focus(),50);
+}
+
+/* =================== START =================== */
+go("home");
+if(!S.pseudo)askPseudo();
+</script>
+</body>
+</html>
