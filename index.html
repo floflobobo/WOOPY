@@ -699,6 +699,20 @@ function lexique(){
   $("#ls").onchange=e=>{lexF.src=e.target.value;draw()};$("#lc").onchange=e=>{lexF.c=e.target.value;draw()};$("#lq").oninput=e=>{lexF.q=e.target.value;draw()};draw();
 }
 
+/* =================== SAUVEGARDE PAR CODE =================== */
+function exportCode(){
+  const words={};for(const [k,v] of Object.entries(S.words)){if(v.ok||v.ko)words[k]=v}
+  const data=Object.assign({},S,{words});
+  const bytes=new TextEncoder().encode(JSON.stringify(data));let bin="";bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return "WOOPY1-"+btoa(bin);
+}
+function importCode(code){
+  try{code=(code||"").replace(/\s+/g,"");if(!code.startsWith("WOOPY1-"))return null;
+    const bin=atob(code.slice(7));const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+    const d=JSON.parse(new TextDecoder().decode(bytes));if(typeof d!=="object"||!d||typeof d.words!=="object")return null;return d}
+  catch(e){return null}
+}
+
 /* =================== RÉGLAGES =================== */
 function settings(){
   view.innerHTML=`<section class="card" style="display:flex;flex-direction:column;gap:14px">
@@ -706,8 +720,29 @@ function settings(){
    <label for="sp"><span class="label">Pseudo</span></label><input id="sp" type="text" maxlength="20" value="${esc(S.pseudo)}">
    <label for="sd"><span class="label">Date du contrôle écrit</span></label><input id="sd" type="date" value="${esc(S.examDate)}">
    <button class="btn" id="ss">Enregistrer</button>
-   <p class="muted" style="margin:0">La progression est gardée dans ce navigateur, sur cet appareil.</p>
-   <button class="btn ghost" id="reset">Tout remettre à zéro</button></section>`;
+   <button class="btn ghost" id="reset">Tout remettre à zéro</button></section>
+  <div style="height:12px"></div>
+  <section class="card" style="display:flex;flex-direction:column;gap:12px">
+   <h2>Sauvegarder ma progression</h2>
+   <p class="muted" style="margin:0">Ta progression est gardée dans ce navigateur, sur cet appareil. Pour ne rien perdre (ou continuer sur un autre appareil), copie ton code de sauvegarde et garde-le dans tes notes ou envoie-le-toi par message.</p>
+   <button class="btn alt" id="exp">Créer mon code de sauvegarde</button>
+   <div id="expBox" class="hidden" style="display:flex;flex-direction:column;gap:8px">
+     <textarea id="expCode" readonly rows="4" aria-label="Code de sauvegarde" style="width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--paper);color:var(--ink);word-break:break-all"></textarea>
+     <button class="btn mint" id="copy">Copier le code</button>
+     <p class="muted" id="expInfo" style="margin:0;font-size:14px"></p>
+   </div>
+   <h3 style="margin-top:6px">Restaurer une sauvegarde</h3>
+   <textarea id="impCode" rows="3" placeholder="Colle ici ton code WOOPY1-…" aria-label="Code à restaurer" style="width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--card);color:var(--ink)"></textarea>
+   <button class="btn ghost" id="imp">Restaurer</button>
+  </section>`;
+  $("#exp").onclick=()=>{const code=exportCode();$("#expCode").value=code;$("#expBox").classList.remove("hidden");
+    $("#expInfo").textContent=`Sauvegarde du ${new Date().toLocaleDateString("fr-FR")} : ${countMastered(VOCAB)} mot(s) maîtrisé(s), ${S.bones} os, ${Object.keys(S.badges).length} badge(s).`;};
+  $("#copy").onclick=async()=>{const ta=$("#expCode");try{await navigator.clipboard.writeText(ta.value);toast("Code copié ! 复制好了")}catch(e){ta.focus();ta.select();toast("Sélectionné : fais Copier (Ctrl+C / appui long)")}};
+  $("#imp").onclick=()=>{const data=importCode($("#impCode").value);
+    if(!data)return toast("Ce code ne marche pas. Vérifie que tu l'as copié en entier.");
+    const nb=Object.values(data.words||{}).filter(w=>(w.b||0)>=3).length;
+    modal(`<div class="woopywrap" style="margin:0 auto">${woopySVG("normal")}</div><h2>Restaurer cette sauvegarde ?</h2><p style="margin:0"><b>${esc(data.pseudo||"?")}</b> · ${nb} mots maîtrisés · ${data.bones||0} os · ${Object.keys(data.badges||{}).length} badges.<br>La progression actuelle de cet appareil sera remplacée.</p><div class="row" style="justify-content:center"><button class="btn ghost" data-close>Annuler</button><button class="btn" id="doimp">Restaurer</button></div>`);
+    $("#doimp").onclick=()=>{S=Object.assign(structuredClone(DEF),data);S.equip=Object.assign({head:null,face:null,neck:null,hand:null},S.equip||{});S.setup=Object.assign({},DEF.setup,S.setup||{});save();lastStage=stageOf();$("#layer").innerHTML="";toast("Progression restaurée ! 欢迎回来");go("home")};};
   $("#ss").onclick=()=>{S.pseudo=$("#sp").value.trim()||S.pseudo;S.examDate=$("#sd").value;save();toast("C'est noté 好的！");go("home")};
   $("#reset").onclick=()=>modal(`<h2>Tout effacer ?</h2><p>Os, accessoires, badges et progression seront perdus. Woopy redevient un chiot.</p><div class="row" style="justify-content:center"><button class="btn ghost" data-close>Annuler</button><button class="btn" id="doreset">Effacer</button></div>`);
   document.addEventListener("click",function h(e){if(e.target.id==="doreset"){document.removeEventListener("click",h);S=structuredClone(DEF);save();$("#layer").innerHTML="";lastStage=0;go("home");askPseudo()}});
