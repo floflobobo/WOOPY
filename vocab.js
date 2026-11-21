@@ -1,4 +1,4 @@
-// [hanzi, pinyin, français, couleur r=rose j=jaune, fiches L=Li Ming Q=Questionnaire D=Discussion A=Article, phrase du cours, mot parent (si caractère seul)]
+// [hanzi, pinyin, français, couleur r=rose j=jaune b=bleu (à reconnaître), fiches L=Li Ming Q=Questionnaire D=Discussion A=Article R=Robots, phrase du cours, mot parent (si caractère seul)]
 const VOCAB_RAW = [
 // ===================== ROSE =====================
 ["互联网","hùliánwǎng","Internet","r","L","在一家互联网公司工作"],
@@ -107,14 +107,14 @@ const VOCAB_RAW = [
 ["行业","hángyè","secteur, industrie","r","A","人工智能已经影响了很多行业"],
 ["效率","xiàolǜ","efficacité","r","AL","它可以帮助人们提高工作效率"],
 ["判断","pànduàn","juger ; jugement","r","A","它们能不能像人一样思考和判断？"],
-["挑战","tiǎozhàn","défi","r","A","虽然人工智能带来了一些挑战"],
+["挑战","tiǎozhàn","défi","r","AR","虽然人工智能带来了一些挑战"],
 ["实际","shíjì","réel, concret","r","A","它也帮助我们解决了很多实际问题"],
 ["研究","yánjiū","rechercher ; recherche","r","A","人工智能帮助科学家研究新药"],
 ["领域","lǐngyù","domaine","r","A","人工智能已经进入了很多领域"],
 ["交通","jiāotōng","circulation, transports","r","AL","比如智慧交通、智慧校园、智能医疗等"],
 ["医疗","yīliáo","soins médicaux, santé","r","A","比如智慧交通、智慧校园、智能医疗等"],
 ["调节","tiáojié","régler, ajuster","r","A","自动调节设备"],
-["机器人","jīqìrén","robot","r","A","扫地机器人还能帮助人们打扫房间"],
+["机器人","jīqìrén","robot","r","AR","扫地机器人还能帮助人们打扫房间"],
 ["节省","jiéshěng","économiser","r","AL","扫地机器人还能帮助人们打扫房间，节省时间"],
 ["发挥","fāhuī","jouer (un rôle), déployer","r","A","在工作中，人工智能也发挥着重要作用"],
 ["管理","guǎnlǐ","gestion ; gérer","r","A","交通管理可以利用智能摄像头和无人机"],
@@ -178,7 +178,7 @@ const VOCAB_RAW = [
 ["品牌","pǐnpái","marque","j","L","比较不同品牌的价格"],
 ["价格","jiàgé","prix","j","L","比较不同品牌的价格"],
 ["用户","yònghù","utilisateur","j","L","功能和用户评价"],
-["决定","juédìng","décider ; décision","j","LA","再决定买哪一种"],
+["决定","juédìng","décider ; décision","r","LAR","再决定买哪一种"],
 ["拍照","pāizhào","prendre des photos","j","L","我喜欢拍照"],
 ["照片","zhàopiàn","photo","j","L","拍完照片以后"],
 ["修图","xiūtú","retoucher des photos","j","L","我会用AI修图"],
@@ -220,7 +220,7 @@ const VOCAB_RAW = [
 ["另外","lìngwài","en outre, de plus","j","L","另外，我也担心大家越来越依赖AI"],
 ["越来越","yuè lái yuè","de plus en plus","j","LQD","大家越来越依赖AI"],
 ["面对面","miàn duì miàn","face à face","j","L","人与人面对面的交流"],
-["交流","jiāoliú","échanger, communiquer","j","LD","人与人面对面的交流"],
+["交流","jiāoliú","échanger, communiquer","b","LDR","人与人面对面的交流"],
 ["可能","kěnéng","peut-être ; possible","j","LQA","交流可能会越来越少"],
 ["陪伴","péibàn","accompagner, tenir compagnie","j","L","每天都陪伴我的助手"],
 ["助手","zhùshǒu","assistant","j","L","AI就像一个每天都陪伴我的助手"],
@@ -266,6 +266,25 @@ const VOCAB_RAW = [
 ["总的来说","zǒng de lái shuō","dans l'ensemble","j","A","总的来说，人工智能有很多优点"],
 ["缺点","quēdiǎn","défaut, inconvénient","j","A","也有一些缺点"],
 ["人们","rénmen","les gens","j","AQ","而是人们怎样使用它"],
+// ===================== FICHE ROBOTS 具身智能 (rose + bleu) =====================
+["感知","gǎnzhī","percevoir ; perception","r","R",""],
+["行动","xíngdòng","agir ; action","r","R",""],
+["人形机器人","rénxíng jīqìrén","robot humanoïde","r","R",""],
+["机器","jīqì","machine","r","R","","人形机器人"],
+["适应","shìyìng","s'adapter","r","R",""],
+["搬运","bānyùn","transporter, déplacer (des charges)","r","R",""],
+["稳定","wěndìng","stable","r","R",""],
+["数据","shùjù","données","r","R",""],
+["分析","fēnxī","analyser ; analyse","r","R",""],
+["控制","kòngzhì","contrôler, commander","r","R",""],
+["复杂","fùzá","complexe","r","R",""],
+["虚拟世界","xūnǐ shìjiè","monde virtuel","r","R",""],
+["世界","shìjiè","monde","r","R","","虚拟世界"],
+["伦理","lúnlǐ","éthique","r","R",""],
+["环境","huánjìng","environnement","b","R",""],
+["黑客","hēikè","hacker, pirate informatique","b","R",""],
+["资金","zījīn","fonds, financement","b","R",""],
+["专业人才","zhuānyè réncái","spécialistes, professionnels qualifiés","b","R",""],
 ];
 
-const SOURCES = {L:"Texte de Li Ming", Q:"Questionnaire", D:"Discussion", A:"Article 利与弊"};
+const SOURCES = {L:"Texte de Li Ming", Q:"Questionnaire", D:"Discussion", A:"Article 利与弊", R:"Robots 具身智能"};

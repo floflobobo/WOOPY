@@ -24,6 +24,7 @@
   --line:#f1dbe5;
   --rose-line:#f7c3d6;--rose-deep:#e06f98;--rose-text:#c2416e;
   --jaune-line:#f3e2a0;--jaune-deep:#e2b92e;--jaune-text:#7a6000;
+  --bleu:#7fcdee;--bleu-pale:#dcf2fb;--bleu-text:#1d6f93;
   --mint-deep:#57b79b;--ko-pale:#ffe5e9;--track:#f6e9ef;--trace-bg:#fffdfd;
   --on-pastel:#43334a;--overlay:rgba(67,51,74,.35);--woopy-line:#cdb3c1;
   --display:"Baloo 2", "Nunito", system-ui, sans-serif;
@@ -35,19 +36,19 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]):not([data-woopy="light"]){--paper:#1e1923;--card:#2a2330;--ink:#f6eaf1;--ink-soft:#b8a6bf;
   --rose:#ff8fb8;--rose-pale:#4b2a3c;--jaune:#ffd95a;--jaune-pale:#3b3322;--mint:#7fd8be;--mint-pale:#1e3a33;
   --red:#ff7d8f;--line:#41364a;--rose-line:#6b3a52;--rose-deep:#c9568a;--rose-text:#ffa9c8;
-  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--mint-deep:#4fa58b;--ko-pale:#4a2530;
+  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--bleu:#7fcdee;--bleu-pale:#1b3341;--bleu-text:#9fdcf5;--mint-deep:#4fa58b;--ko-pale:#4a2530;
   --track:#3a3141;--trace-bg:#241e29;--on-pastel:#43334a;--overlay:rgba(10,6,14,.6);--woopy-line:#8f7d98;
   color-scheme:dark;}}
 :root[data-theme="dark"]:not([data-woopy="light"]){--paper:#1e1923;--card:#2a2330;--ink:#f6eaf1;--ink-soft:#b8a6bf;
   --rose:#ff8fb8;--rose-pale:#4b2a3c;--jaune:#ffd95a;--jaune-pale:#3b3322;--mint:#7fd8be;--mint-pale:#1e3a33;
   --red:#ff7d8f;--line:#41364a;--rose-line:#6b3a52;--rose-deep:#c9568a;--rose-text:#ffa9c8;
-  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--mint-deep:#4fa58b;--ko-pale:#4a2530;
+  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--bleu:#7fcdee;--bleu-pale:#1b3341;--bleu-text:#9fdcf5;--mint-deep:#4fa58b;--ko-pale:#4a2530;
   --track:#3a3141;--trace-bg:#241e29;--on-pastel:#43334a;--overlay:rgba(10,6,14,.6);--woopy-line:#8f7d98;
   color-scheme:dark;}
 :root[data-woopy="dark"]{--paper:#1e1923;--card:#2a2330;--ink:#f6eaf1;--ink-soft:#b8a6bf;
   --rose:#ff8fb8;--rose-pale:#4b2a3c;--jaune:#ffd95a;--jaune-pale:#3b3322;--mint:#7fd8be;--mint-pale:#1e3a33;
   --red:#ff7d8f;--line:#41364a;--rose-line:#6b3a52;--rose-deep:#c9568a;--rose-text:#ffa9c8;
-  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--mint-deep:#4fa58b;--ko-pale:#4a2530;
+  --jaune-line:#5c4f2a;--jaune-deep:#c9a22a;--jaune-text:#ffe08a;--bleu:#7fcdee;--bleu-pale:#1b3341;--bleu-text:#9fdcf5;--mint-deep:#4fa58b;--ko-pale:#4a2530;
   --track:#3a3141;--trace-bg:#241e29;--on-pastel:#43334a;--overlay:rgba(10,6,14,.6);--woopy-line:#8f7d98;
   color-scheme:dark;}
 *{box-sizing:border-box}
@@ -93,6 +94,8 @@ h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
 .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800}
 .tag.r{background:var(--rose-pale);color:var(--rose-text)}
 .tag.j{background:var(--jaune-pale);color:var(--jaune-text)}
+.tag.b{background:var(--bleu-pale);color:var(--bleu-text)}
+.bar.b>i{background:linear-gradient(90deg,#55b7e0,var(--bleu))}
 
 /* ---------- home ---------- */
 .hero{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
@@ -179,6 +182,7 @@ h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
 .lex{display:flex;flex-direction:column;gap:6px}
 .lexrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--jaune);border-radius:14px;padding:8px 12px}
 .lexrow.r{border-left-color:var(--rose)}
+.lexrow.b{border-left-color:var(--bleu)}
 .lexrow .h{font-family:var(--zh);font-size:22px;min-width:3.2em}
 .lexrow .p{font-weight:700}
 .lexrow .f{font-size:14px;color:var(--ink-soft)}
@@ -358,6 +362,7 @@ const LINES={
   hello:{happy:["你好 {p} ! On remet ça ? J'ai gardé un os pour toi.","今天也加油！Tes mots roses t'attendent, et moi aussi."],normal:["你好 {p}. Hier t'étais là, aujourd'hui aussi j'espère ?","喂，{p} ! Les caractères ne vont pas s'apprendre tout seuls."],sad:["呜呜… {p}, tu m'as oublié ? Ça fait {d} jours…","我好难过… {d} jours sans réviser. Même mon os est triste."]},
 };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
+const colName=c=>c==="r"?"rose":c==="b"?"bleu · à reconnaître":"jaune";
 
 /* =================== PINYIN =================== */
 const TONE={"ā":["a",1],"á":["a",2],"ǎ":["a",3],"à":["a",4],"ē":["e",1],"é":["e",2],"ě":["e",3],"è":["e",4],"ī":["i",1],"í":["i",2],"ǐ":["i",3],"ì":["i",4],"ō":["o",1],"ó":["o",2],"ǒ":["o",3],"ò":["o",4],"ū":["u",1],"ú":["u",2],"ǔ":["u",3],"ù":["u",4],"ǖ":["v",1],"ǘ":["v",2],"ǚ":["v",3],"ǜ":["v",4],"ü":["v",0]};
@@ -389,12 +394,13 @@ function pinyinHint(){return "Tons obligatoires : tape <b>tui1jian4</b> ou <b>tu
 function pool(src=S.setup.src,filter=S.setup.filter){
   let l=VOCAB.filter(w=>src==="all"||w.src.includes(src));
   if(filter==="rose")l=l.filter(w=>w.c==="r");
+  if(filter==="bleu")l=l.filter(w=>w.c==="b");
   if(filter==="err")l=l.filter(w=>{const s=S.words[w.id];return s&&s.ko>0&&s.b<3});
   return l;
 }
 function weight(w){
   const s=ws(w.id);const due=Date.now()-s.t>=INTERVALS[s.b]*DAY;
-  return (due?3:0.6)*(6-s.b)*(w.c==="r"?2.2:1)*(s.ko>s.ok?1.5:1);
+  return (due?3:0.6)*(6-s.b)*(w.c==="r"?2.2:w.c==="b"?1.4:1)*(s.ko>s.ok?1.5:1);
 }
 let recent=[];
 function pickWord(list,filterFn){
@@ -439,6 +445,7 @@ const BADGES=[
   {id:"Q",zh:"问",t:"Sondeur",d:"Tout le questionnaire maîtrisé",ok:()=>fullSrc("Q")},
   {id:"D",zh:"论",t:"Débatteur",d:"Toute la discussion maîtrisée",ok:()=>fullSrc("D")},
   {id:"A",zh:"文",t:"Lecteur d'articles",d:"Tout l'article maîtrisé",ok:()=>fullSrc("A")},
+  {id:"R",zh:"机",t:"Roboticienne",d:"Toute la fiche robots maîtrisée",ok:()=>fullSrc("R")},
   {id:"chrono15",zh:"快",t:"Rapide",d:"15 points en course contre la montre",ok:()=>S.bestChrono>=15},
   {id:"chrono25",zh:"闪",t:"Éclair",d:"25 points en course contre la montre",ok:()=>S.bestChrono>=25},
   {id:"trace10",zh:"笔",t:"Calligraphe",d:"Tracer 10 caractères",ok:()=>S.traced>=10},
@@ -468,7 +475,7 @@ function go(v){if(game&&game.timer)clearInterval(game.timer);if(game&&game.write
 /* =================== ACCUEIL =================== */
 function home(){
   const m=mood();const d=daysSince(S.lastDay);const st=stageOf();
-  const roses=VOCAB.filter(w=>w.c==="r"),jaunes=VOCAB.filter(w=>w.c==="j");
+  const roses=VOCAB.filter(w=>w.c==="r"),jaunes=VOCAB.filter(w=>w.c==="j"),bleus=VOCAB.filter(w=>w.c==="b");
   const next=STAGES[st+1];const mm=countMastered(VOCAB);
   let cd="";
   if(S.examDate){const n=Math.ceil((Date.parse(S.examDate)-Date.parse(todayStr()))/DAY);
@@ -495,6 +502,10 @@ function home(){
       <div class="bar y"><i style="width:${Math.round(countMastered(jaunes)/jaunes.length*100)}%"></i></div><span class="muted"><b>${countMastered(jaunes)}</b> / ${jaunes.length} maîtrisés</span></div>
   </section>
   <div style="height:12px"></div>
+  <section class="card stat"><div class="row" style="justify-content:space-between"><b>Mots bleus</b><span class="tag b">à reconnaître</span></div>
+      <div class="bar b"><i style="width:${bleus.length?Math.round(countMastered(bleus)/bleus.length*100):0}%"></i></div><span class="muted"><b>${countMastered(bleus)}</b> / ${bleus.length} maîtrisés</span>
+  </section>
+  <div style="height:12px"></div>
   <section class="card">
     <h3 style="margin-bottom:8px">Par fiche</h3>
     <div class="lex">${Object.entries(SOURCES).map(([k,n])=>{const l=VOCAB.filter(w=>w.src.includes(k));const c=countMastered(l);return `<div class="stat"><div class="row" style="justify-content:space-between"><span>${n}</span><span class="muted" style="font-variant-numeric:tabular-nums">${c}/${l.length}</span></div><div class="bar m"><i style="width:${Math.round(c/l.length*100)}%"></i></div></div>`}).join("")}</div>
@@ -514,8 +525,8 @@ function setup(){
   view.innerHTML=`
   <section class="card" style="display:flex;flex-direction:column;gap:14px">
     <h2>Nouvelle partie</h2>
-    <div><p class="label">Fiche</p>${seg("src",[["all","Tout mélangé"],["L","Texte Li Ming"],["Q","Questionnaire"],["D","Discussion"],["A","Article 利与弊"]],st.src)}</div>
-    <div><p class="label">Mots</p>${seg("filter",[["all","Rose + jaune"],["rose","Rose seul"],["err","Mes erreurs"]],st.filter,"y")}</div>
+    <div><p class="label">Fiche</p>${seg("src",[["all","Tout mélangé"],["L","Texte Li Ming"],["Q","Questionnaire"],["D","Discussion"],["A","Article 利与弊"],["R","Robots 具身智能"]],st.src)}</div>
+    <div><p class="label">Mots</p>${seg("filter",[["all","Tous les mots"],["rose","Rose seul"],["bleu","Bleu seul"],["err","Mes erreurs"]],st.filter,"y")}</div>
     <div><p class="label">Exercice</p>${seg("mode",MODES,st.mode)}</div>
     <p class="muted" id="poolInfo"></p>
     <button class="btn wide" id="start">C'est parti ! 开始</button>
@@ -547,7 +558,7 @@ function nextQ(){
   if(game.lives<=0)return endGame();
   let m=game.mode;
   if(m==="mix"){const r=Math.random();m=r<.42?"qcm":r<.64?"type":r<.84?"trous":r<.93?"pairs":"flash"}
-  if(m==="trous"&&!game.list.some(w=>w.ex))m="qcm";
+  if(m==="trous"&&!game.list.some(w=>w.ex&&w.c!=="b"))m="qcm";
   if(m==="pairs"&&game.list.length<5)m="qcm";
   ({qcm:qQCM,type:qType,trous:qTrous,pairs:qPairs,flash:qFlash})[m]();
 }
@@ -560,7 +571,7 @@ function afterAnswer(w,ok,{noLife=false,lead=""}={}){
   if(ok&&game.combo>=5&&game.combo%5===0)say=pick(LINES.combo).replace("{n}",game.combo);
   const fb=document.createElement("div");fb.className=`feedback ${ok?"ok":"ko"}`;
   fb.innerHTML=`<div class="mini">${woopySVG(ok?"happy":"oops")}</div><div><div class="say">${esc(say)}</div>
-    <div class="word">${esc(w.h)} <span style="font-family:var(--body);font-size:17px">${esc(w.p)}</span> <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+    <div class="word">${esc(w.h)} <span style="font-family:var(--body);font-size:17px">${esc(w.p)}</span> <span class="tag ${w.c}">${colName(w.c)}</span></div>
     <div>${esc(w.fr)}</div>${w.ex?`<div class="ex">${esc(w.ex)}</div>`:w.parent?`<div class="ex">dans ${esc(w.parent)}</div>`:""}
     ${lead}<button class="btn ${ok?"mint":""} wide" id="next" style="margin-top:8px">${game.lives<=0?"Voir le bilan":"Suivant"}</button></div>`;
   $(".qcard").appendChild(fb);
@@ -571,14 +582,14 @@ function afterAnswer(w,ok,{noLife=false,lead=""}={}){
 const DIRS=[["zh2fr","Que veut dire…"],["fr2zh","Comment dit-on…"],["zh2py","Quel est le pinyin de…"],["py2zh","Quel caractère pour…"]];
 function qQCM(){
   const w=pickWord(game.list);
-  const [dir,label]=pick(DIRS);
+  const [dir,label]=w.c==="b"?pick(DIRS.filter(d=>d[0]==="zh2fr"||d[0]==="zh2py")):pick(DIRS);
   let prompt,key,cls="";
   if(dir==="zh2fr"){prompt=`<div class="big">${esc(w.h)}</div>`;key="fr"}
   if(dir==="fr2zh"){prompt=`<div class="big fr">${esc(w.fr)}</div>`;key="h";cls="zh"}
   if(dir==="zh2py"){prompt=`<div class="big">${esc(w.h)}</div>`;key="p"}
   if(dir==="py2zh"){prompt=`<div class="big py">${esc(w.p)}</div>`;key="h";cls="zh"}
   const opts=shuffle([w,...distractors(w,key)]);
-  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${label} <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>${prompt}
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${label} <span class="tag ${w.c}">${colName(w.c)}</span></div>${prompt}
     <div class="opts">${opts.map((o,i)=>`<button class="opt ${cls}" data-i="${i}">${esc(o[key])}</button>`).join("")}</div></section>`;
   bindQuit();
   view.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
@@ -589,8 +600,9 @@ function qQCM(){
   });
 }
 function qType(){
-  const w=pickWord(game.list);const fromFr=Math.random()<.45;
-  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${fromFr?"Écris en chinois (pinyin avec tons ou caractères)":"Écris le pinyin avec les tons"} <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+  if(!game.list.some(x=>x.c!=="b"))return qQCM();
+  const w=pickWord(game.list,x=>x.c!=="b");const fromFr=Math.random()<.45;
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">${fromFr?"Écris en chinois (pinyin avec tons ou caractères)":"Écris le pinyin avec les tons"} <span class="tag ${w.c}">${colName(w.c)}</span></div>
     ${fromFr?`<div class="big fr">${esc(w.fr)}</div>`:`<div class="big">${esc(w.h)}</div>`}
     <form class="answer" id="f"><input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. tui1jian4" aria-label="Ta réponse"><button class="btn">OK</button></form>
     <div class="hint">${pinyinHint()}</div></section>`;
@@ -599,10 +611,10 @@ function qType(){
     const ok=checkPinyin(inp.value,w);inp.style.borderColor=ok?"var(--mint)":"var(--red)";afterAnswer(w,ok,{lead:ok?"":`<div class="muted">Tu as écrit : ${esc(inp.value)}</div>`})};
 }
 function qTrous(){
-  const w=pickWord(game.list,x=>!!x.ex);
+  const w=pickWord(game.list,x=>!!x.ex&&x.c!=="b");
   const parts=w.ex.split(w.h);const sent=esc(parts[0])+'<span class="gap">？</span>'+esc(parts.slice(1).join(w.h));
   const opts=shuffle([w,...distractors(w,"h")]);
-  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Complète la phrase du cours <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Complète la phrase du cours <span class="tag ${w.c}">${colName(w.c)}</span></div>
     <div class="sentence">${sent}</div><div class="muted">Indice : « ${esc(w.fr)} »</div>
     <div class="opts">${opts.map((o,i)=>`<button class="opt zh" data-i="${i}">${esc(o.h)}</button>`).join("")}</div></section>`;
   bindQuit();
@@ -611,9 +623,9 @@ function qTrous(){
     $(".gap").textContent=w.h;afterAnswer(w,ok)});
 }
 function qFlash(){
-  const w=pickWord(game.list);const zhFront=Math.random()<.6;
+  const w=pickWord(game.list);const zhFront=w.c==="b"||Math.random()<.6;
   const front=zhFront?`<div class="big">${esc(w.h)}</div>`:`<div class="big fr">${esc(w.fr)}</div>`;
-  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Flashcard · touche pour retourner <span class="tag ${w.c}">${w.c==="r"?"rose":"jaune"}</span></div>
+  view.innerHTML=gameBar()+`<section class="qcard"><div class="prompt-kind">Flashcard · touche pour retourner <span class="tag ${w.c}">${colName(w.c)}</span></div>
    <div class="flash" id="fc"><div class="inner"><div class="face">${front}</div>
    <div class="face back"><div class="big" style="font-size:44px">${esc(w.h)}</div><div style="font-weight:800;font-size:22px">${esc(w.p)}</div><div>${esc(w.fr)}</div>${w.ex?`<div class="zh muted" style="font-size:15px">${esc(w.ex)}</div>`:""}</div></div></div>
    <div class="row" id="fb" style="justify-content:center;margin-top:10px"><button class="btn alt" id="flip">Retourner</button></div></section>`;
@@ -718,7 +730,7 @@ let lexF={src:"all",c:"all",q:""};
 function lexique(){
   view.innerHTML=`<section style="display:flex;flex-direction:column;gap:12px"><h2>Lexique · ${VOCAB.length} mots</h2>
    <div class="row"><select id="ls" aria-label="Fiche"><option value="all">Toutes les fiches</option>${Object.entries(SOURCES).map(([k,n])=>`<option value="${k}">${n}</option>`).join("")}</select>
-   <select id="lc" aria-label="Couleur"><option value="all">Rose + jaune</option><option value="r">Rose</option><option value="j">Jaune</option></select>
+   <select id="lc" aria-label="Couleur"><option value="all">Toutes les couleurs</option><option value="r">Rose</option><option value="b">Bleu</option><option value="j">Jaune</option></select>
    <input id="lq" type="text" placeholder="Chercher…" aria-label="Chercher" style="flex:1;min-width:140px"></div>
    <div class="lex" id="ll"></div></section>`;
   $("#ls").value=lexF.src;$("#lc").value=lexF.c;$("#lq").value=lexF.q;

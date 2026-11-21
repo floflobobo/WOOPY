@@ -4,10 +4,11 @@ Appli web gamifiée pour apprendre le vocabulaire chinois du cours « 人工智�
 
 ## Contenu
 
-- **263 mots** relevés sur les fiches du cours : 123 roses (à connaître absolument, surlignés rose ou violet) et 140 jaunes (à consolider).
-- 4 fiches : texte de Li Ming, questionnaire, discussion, article 利与弊.
+- **281 mots** relevés sur les fiches du cours : 138 roses (à connaître absolument, surlignés rose ou violet), 5 bleus (à reconnaître) et 138 jaunes (à consolider).
+- Les mots bleus ne sont interrogés qu'en reconnaissance (caractère → français ou pinyin).
+- 5 fiches : texte de Li Ming, questionnaire, discussion, article 利与弊, vocabulaire robots 具身智能.
 - Exercices : QCM dans les 4 sens (chinois ↔ français, caractère ↔ pinyin), flashcards, réponse à taper (pinyin avec tons, ex. `tui1jian4` ou `tuījiàn`, ou caractères), phrases à trous, paires, chrono 60 s, tracé des caractères roses (bonus).
-- Gamification : 3 vies par partie, os à gagner, 12 accessoires pour Woopy, 18 badges, 5 stades de croissance, humeur selon l'assiduité, compte à rebours avant le contrôle.
+- Gamification : 3 vies par partie, os à gagner, 12 accessoires pour Woopy, 19 badges, 5 stades de croissance, humeur selon l'assiduité, compte à rebours avant le contrôle.
 - Répétition espacée : les mots ratés et les mots roses reviennent plus souvent.
 
 ## Fichiers
