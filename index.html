@@ -387,7 +387,7 @@ const LINES={
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const DLINES={
   ok:["正确！Le Comité central du vocabulaire t'autorise à continuer.","好！Un os. N'en demande pas plus, c'est le plan quinquennal.","对！Réponse conforme à la ligne officielle du Parti des Os.","Correct. Tu échappes à la corvée de calligraphie… cette fois.","服从！Le Grand Timonier Woopy est satisfait. Pour l'instant.","Bien. Je fais ériger une statue à ta gloire. Une petite. En croquettes."],
-  ko:["错！ERREUR. Ton dossier est transmis au Comité des Caractères.","不对！Amende : un os confisqué au profit du Peuple.","INACCEPTABLE ! Tu recopieras ce mot cent fois. 一百遍！","AUTOCRITIQUE IMMÉDIATE ! …Bon. C'est noté dans ton dossier.","Faux ! Woopy ordonne : plus jamais. JAMAIS. 明白吗？","Cette erreur est un complot de l'étranger. Recommence."],
+  ko:["错！ERREUR. Ton dossier est transmis au Comité des Caractères.","不对！Le Peuple est profondément déçu. Le Peuple, c'est moi.","INACCEPTABLE ! Tu recopieras ce mot cent fois. 一百遍！","AUTOCRITIQUE IMMÉDIATE ! …Bon. C'est noté dans ton dossier.","Faux ! Woopy ordonne : plus jamais. JAMAIS. 明白吗？","Cette erreur est un complot de l'étranger. Recommence."],
   combo:["{n} d'affilée ! Tu es promue Camarade Modèle du Vocabulaire 🎖️","连胜 {n} ! Le Grand Timonier daigne remuer la queue. Une fois."],
   hello:{happy:["立正！{p}, au rapport. Le quota du jour n'attend pas.","Camarade {p} ! Les mots roses sont la priorité absolue du Plan."],normal:["{p} ! Hier, présente. Aujourd'hui ? Le Comité observe.","立正！Tes caractères ne vont pas s'apprendre par décret… quoique."],sad:["{p} ! {d} jours d'absence. Désertion constatée. Tu as intérêt à répondre juste.","{d} jours sans réviser. J'ai fait fondre tes os pour en faire une statue de moi."]},
 };
@@ -560,7 +560,7 @@ function setup(){
     <div><p class="label">Fiche</p>${seg("src",[["all","Tout mélangé"],["L","Texte Li Ming"],["Q","Questionnaire"],["D","Discussion"],["A","Article 利与弊"],["R","Robots 具身智能"]],st.src)}</div>
     <div><p class="label">Mots</p>${seg("filter",[["all","Tous les mots"],["rose","Rose seul"],["bleu","Bleu seul"],["err","Mes erreurs"]],st.filter,"y")}</div>
     <div><p class="label">Exercice</p>${seg("mode",MODES,st.mode)}</div>
-    <div><p class="label">Personnalité de Woopy</p><div class="seg dictseg">${[["0","Gentil (taquin) 🐶"],["1","Dictateur 独裁者 🎖️"]].map(([v,l])=>`<button aria-pressed="${(S.dictator?"1":"0")===v}" data-v="${v}">${l}</button>`).join("")}</div><p class="muted" style="margin:6px 0 0;font-size:14px">En mode dictateur, Woopy porte la casquette, hurle des ordres, et chaque erreur coûte une amende d'un os.</p></div>
+    <div><p class="label">Personnalité de Woopy</p><div class="seg dictseg">${[["0","Gentil (taquin) 🐶"],["1","Dictateur 独裁者 🎖️"]].map(([v,l])=>`<button aria-pressed="${(S.dictator?"1":"0")===v}" data-v="${v}">${l}</button>`).join("")}</div><p class="muted" style="margin:6px 0 0;font-size:14px">En mode dictateur, Woopy porte la casquette, hurle des ordres et impose un quota de 30 réponses par jour. Tu ne perds pas d'os.</p></div>
     <p class="muted" id="poolInfo"></p>
     <button class="btn wide" id="start">C'est parti ! 开始</button>
   </section>`;
@@ -598,8 +598,7 @@ function nextQ(){
 function afterAnswer(w,ok,{noLife=false,lead=""}={}){
   grade(w,ok);game.n++;
   if(ok){game.ok++;game.combo++;let b=1;if(game.combo%5===0)b+=2;game.bones+=b;addBones(b);if(game.combo>S.bestCombo){S.bestCombo=game.combo;save()}}
-  else{game.combo=0;game.missed.add(w.id);if(!noLife){game.lives--;game.lostLife=true}
-    if(S.dictator&&S.bones>0){S.bones--;game.fines=(game.fines||0)+1;save();updChips()}}
+  else{game.combo=0;game.missed.add(w.id);if(!noLife){game.lives--;game.lostLife=true}}
   if(!game.lostLife&&game.n>=15&&!S.perfect){S.perfect=true;save()}
   let say=ok?pick(LX("ok")):pick(LX("ko"));
   if(ok&&game.combo>=5&&game.combo%5===0)say=pick(LX("combo")).replace("{n}",game.combo);
@@ -733,7 +732,7 @@ function endGame(){
   view.innerHTML=`<section class="card" style="text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center">
     <div class="woopywrap">${woopySVG(good||g.chronoScore>=15?"happy":g.n?"oops":"normal")}</div>
     <h2>${S.dictator?"Rapport au Comité":"Bilan de la partie"}</h2><div class="bubble">${esc(msg)}</div>
-    <div class="row" style="justify-content:center"><span class="chip">${g.ok}/${g.n} bonnes réponses</span><span class="chip bone">+${g.bones} 🦴</span>${g.fines?`<span class="chip count">Amendes : −${g.fines} 🦴</span>`:""}</div>
+    <div class="row" style="justify-content:center"><span class="chip">${g.ok}/${g.n} bonnes réponses</span><span class="chip bone">+${g.bones} 🦴</span></div>
     ${missed.length?`<div style="width:100%;text-align:left"><p class="label">À revoir</p><div class="lex">${missed.map(lexRow).join("")}</div></div>`:""}
     <div class="row" style="justify-content:center"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="home">Accueil</button></div></section>`;
   $("#again").onclick=()=>startGame();$("#home").onclick=()=>go("home");
@@ -798,7 +797,7 @@ function settings(){
    <h2>Réglages</h2>
    <label for="sp"><span class="label">Pseudo</span></label><input id="sp" type="text" maxlength="20" value="${esc(S.pseudo)}">
    <label for="sd"><span class="label">Date du contrôle écrit</span></label><input id="sd" type="date" value="${esc(S.examDate)}">
-   <div><p class="label">Personnalité de Woopy</p><div class="seg dictseg">${[["0","Gentil (taquin) 🐶"],["1","Dictateur 独裁者 🎖️"]].map(([v,l])=>`<button aria-pressed="${(S.dictator?"1":"0")===v}" data-v="${v}">${l}</button>`).join("")}</div><p class="muted" style="margin:6px 0 0;font-size:14px">En mode dictateur, Woopy porte la casquette, hurle des ordres, et chaque erreur coûte une amende d'un os.</p></div>
+   <div><p class="label">Personnalité de Woopy</p><div class="seg dictseg">${[["0","Gentil (taquin) 🐶"],["1","Dictateur 独裁者 🎖️"]].map(([v,l])=>`<button aria-pressed="${(S.dictator?"1":"0")===v}" data-v="${v}">${l}</button>`).join("")}</div><p class="muted" style="margin:6px 0 0;font-size:14px">En mode dictateur, Woopy porte la casquette, hurle des ordres et impose un quota de 30 réponses par jour. Tu ne perds pas d'os.</p></div>
    <div><p class="label">Apparence</p><div class="seg" id="th">${[["auto","Auto (comme l'appareil)"],["light","Clair ☀️"],["dark","Sombre 🌙"]].map(([v,l])=>`<button aria-pressed="${(S.theme||"auto")===v}" data-v="${v}">${l}</button>`).join("")}</div></div>
    <button class="btn" id="ss">Enregistrer</button>
    <button class="btn ghost" id="reset">Tout remettre à zéro</button></section>
