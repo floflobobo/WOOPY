@@ -48,6 +48,12 @@ On prend en photo une page de cours : l'appli lit le chinois et surligne en rose
 - Le texte imprimé marche bien, l'écriture à la main beaucoup moins.
 - Fichiers dans `ocr/` (~14 Mo, dont ~6 Mo téléchargés au premier scan) : Tesseract.js et son moteur (Apache-2.0), le modèle chinois simplifié `chi_sim` (tessdata_best, Apache-2.0) encodé en base64 dans `chi_sim.traineddata.js`, et `woopy-worker.js` qui le donne au moteur.
 
+## Ajouter ses propres mots
+
+Dans le Lexique, « ＋ Ajouter un mot » : caractères, pinyin (`tui1jian4` est converti en `tuījiàn`), traduction, couleur et, si on veut, la phrase du cours. Les mots ajoutés entrent dans les jeux, la répétition espacée et le scanner photo, et apparaissent dans la fiche « Mes mots 我的 ». On touche un mot perso pour le modifier ou le supprimer.
+
+Ces mots sont enregistrés dans le navigateur avec la progression, et inclus dans le code de sauvegarde `WOOPY1-…`.
+
 ## Licences
 
 - Hanzi Writer : MIT (`LICENSE-hanzi-writer`)
