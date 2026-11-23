@@ -38,7 +38,18 @@ Ajouter des lignes dans `vocab.js` (et une entrée dans `SOURCES` pour une nouve
 
 La progression est enregistrée dans le navigateur (localStorage), sur l'appareil utilisé.
 
+## Scanner une photo (onglet « Photo » 扫)
+
+On prend en photo une page de cours : l'appli lit le chinois et surligne en rose, jaune ou bleu les mots qui sont dans `vocab.js`. On touche un mot pour voir sa fiche, et « Réviser ces mots » lance une partie avec ceux de la photo.
+
+- La lecture (OCR) se fait **dans le navigateur** avec Tesseract.js : la photo n'est envoyée nulle part.
+- Avant la lecture, l'image passe en noir et blanc adaptatif pour effacer le surligneur (sinon les mots surlignés sont mal lus).
+- Si presque aucun mot n'est trouvé, l'appli essaie la photo tournée à 90°, 180° et 270°.
+- Le texte imprimé marche bien, l'écriture à la main beaucoup moins.
+- Fichiers dans `ocr/` (~14 Mo, dont ~6 Mo téléchargés au premier scan) : Tesseract.js et son moteur (Apache-2.0), le modèle chinois simplifié `chi_sim` (tessdata_best, Apache-2.0) encodé en base64 dans `chi_sim.traineddata.js`, et `woopy-worker.js` qui le donne au moteur.
+
 ## Licences
 
 - Hanzi Writer : MIT (`LICENSE-hanzi-writer`)
+- Tesseract.js et tesseract.js-core : Apache-2.0 (`ocr/LICENSE-*`)
 - Données de traits : Arphic Public License (`LICENSE-strokes-ARPHICPL.TXT`)

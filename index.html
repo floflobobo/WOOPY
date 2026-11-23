@@ -203,6 +203,28 @@ body.dict .nav{border-top:3px solid #d62b2b}
 .dictseg button[data-v="1"][aria-pressed="true"]{background:#d62b2b;border-color:#9e1b1b;color:#fff3c4}
 @keyframes twitch{0%,84%,100%{transform:rotate(0)}87%{transform:rotate(-7deg) scale(1.03)}90%{transform:rotate(7deg) scale(1.03)}93%{transform:rotate(-5deg)}96%{transform:rotate(4deg)}}
 .w-dict .wbody{animation:twitch 2.2s ease-in-out infinite}
+/* ---------- scanner photo ---------- */
+.scanhero{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.scanhero .woopywrap{width:130px;height:130px;flex:none}
+.scanhero .stat{flex:1 1 220px}
+.scantips{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.scanbtn{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.scanprog{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
+.scanprog .woopywrap{width:120px;height:120px}
+.scanwrap{border-radius:16px;overflow:auto;border:1.5px solid var(--line);background:var(--card);max-height:78vh;-webkit-overflow-scrolling:touch}
+.scanimg{position:relative;width:100%;line-height:0}
+.scanwrap.zoom .scanimg{width:220%}
+.scanimg img{width:100%;height:auto;display:block;user-select:none;-webkit-user-select:none}
+.mk{position:absolute;border:0;padding:0;margin:0;border-radius:4px;mix-blend-mode:multiply;cursor:pointer;background:rgba(255,120,170,.55);box-shadow:0 0 0 2px rgba(224,80,140,.85)}
+.mk.j{background:rgba(255,214,60,.6);box-shadow:0 0 0 2px rgba(214,170,20,.9)}
+.mk.b{background:rgba(110,195,240,.55);box-shadow:0 0 0 2px rgba(40,140,200,.85)}
+.mk.one{box-shadow:none;border-bottom:3px dotted rgba(67,51,74,.7)}
+.mk.done::after{content:"✓";position:absolute;right:-6px;top:-10px;font:800 11px/16px var(--body);width:16px;height:16px;border-radius:50%;background:var(--mint);color:#173f35;text-align:center;mix-blend-mode:normal}
+.scanbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.scanbar .btn{padding:10px 14px;font-size:15px}
+.scanlegend{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.scanlist .lexrow{cursor:pointer}
+@media (max-width:420px){.nav button{font-size:11px}.nav button .ic{font-size:18px}}
 /* ---------- overlays ---------- */
 .overlay{position:fixed;inset:0;background:var(--overlay);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
 .modal{background:var(--card);border-radius:24px;padding:20px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px}
@@ -235,6 +257,7 @@ body.dict .nav{border-top:3px solid #d62b2b}
   <div class="in">
     <button data-go="home"><span class="ic">家</span>Accueil</button>
     <button data-go="setup"><span class="ic">玩</span>Jouer</button>
+    <button data-go="scan"><span class="ic">扫</span>Photo</button>
     <button data-go="shop"><span class="ic">店</span>Boutique</button>
     <button data-go="badges"><span class="ic">奖</span>Badges</button>
     <button data-go="lexique"><span class="ic">词</span>Lexique</button>
@@ -501,7 +524,7 @@ function nav(v){document.querySelectorAll(".nav button").forEach(b=>b.setAttribu
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.go));
 let game=null;
 function go(v){if(game&&game.timer)clearInterval(game.timer);if(game&&game.writer){try{game.writer.cancelQuiz()}catch(e){}}game=null;nav(v);updChips();window.scrollTo(0,0);
-  ({home,setup,shop,badges,lexique,settings})[v]();}
+  ({home,setup,scan:scanner,shop,badges,lexique,settings})[v]();}
 
 /* =================== ACCUEIL =================== */
 function home(){
@@ -574,9 +597,9 @@ function setup(){
 }
 
 /* =================== MOTEUR DE JEU =================== */
-function startGame(){
-  const mode=S.setup.mode;recent=[];
-  game={mode,list:pool(),lives:3,combo:0,n:0,ok:0,bones:0,missed:new Set(),lostLife:false};
+function startGame(custom){
+  const mode=custom?"mix":S.setup.mode;recent=[];
+  game={mode,custom:custom||null,list:custom||pool(),lives:3,combo:0,n:0,ok:0,bones:0,missed:new Set(),lostLife:false};
   if(mode==="chrono")return chrono();
   if(mode==="trace")return trace();
   nextQ();
@@ -735,7 +758,197 @@ function endGame(){
     <div class="row" style="justify-content:center"><span class="chip">${g.ok}/${g.n} bonnes réponses</span><span class="chip bone">+${g.bones} 🦴</span></div>
     ${missed.length?`<div style="width:100%;text-align:left"><p class="label">À revoir</p><div class="lex">${missed.map(lexRow).join("")}</div></div>`:""}
     <div class="row" style="justify-content:center"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="home">Accueil</button></div></section>`;
-  $("#again").onclick=()=>startGame();$("#home").onclick=()=>go("home");
+  $("#again").onclick=()=>startGame(g.custom);$("#home").onclick=()=>go("home");
+}
+
+/* =================== SCANNER PHOTO (reconnaissance locale, rien n'est envoyé) =================== */
+const SCAN_MAXLEN=Math.max(...VOCAB.map(w=>[...w.h].length));
+const SCAN_FULL=2600,SCAN_QUICK=1500;
+const scan={src:null,rot:0,res:null,img:null,singles:false,zoom:false,busy:false,step:"",pct:0,err:""};
+let ocrWorker=null,ocrLog=()=>{};
+function loadScript(src){return new Promise((ok,ko)=>{if(window.Tesseract)return ok();const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=()=>ko(new Error("script "+src));document.head.appendChild(s)})}
+async function getOCR(){
+  if(ocrWorker)return ocrWorker;
+  await loadScript("ocr/tesseract.min.js");
+  const base=new URL("ocr/",location.href).href;
+  const opts={workerPath:base+"woopy-worker.js",workerBlobURL:false,corePath:base,langPath:base.replace(/\/$/,""),gzip:true,cacheMethod:"none",logger:m=>ocrLog(m),errorHandler:()=>{}};
+  ocrWorker=await Tesseract.createWorker("chi_sim",1,opts);
+  try{await ocrWorker.setParameters({user_defined_dpi:"300"})}catch(e){}
+  return ocrWorker;
+}
+async function decodePhoto(file){
+  try{return await createImageBitmap(file,{imageOrientation:"from-image"})}catch(e){}
+  return await new Promise((ok,ko)=>{const u=URL.createObjectURL(file);const im=new Image();im.onload=()=>ok(im);im.onerror=()=>ko(new Error("image"));im.src=u});
+}
+function drawRot(src,rot,longSide,maxUp=2.5){
+  const sw=src.width,sh=src.height,k=Math.min(longSide/Math.max(sw,sh),maxUp);
+  const w=Math.round(sw*k),h=Math.round(sh*k),q=rot%180!==0;
+  const c=document.createElement("canvas");c.width=q?h:w;c.height=q?w:h;
+  const x=c.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+  x.translate(c.width/2,c.height/2);x.rotate(rot*Math.PI/180);x.imageSmoothingQuality="high";x.drawImage(src,-w/2,-h/2,w,h);return c;
+}
+/* Noir et blanc adaptatif (Sauvola) sur le canal le plus clair : le surligneur rose, jaune ou violet
+   devient blanc, l'encre reste noire. Sans ça, les mots surlignés (ceux qui comptent !) sont mal lus. */
+function binarize(c){
+  const W=c.width,H=c.height,x=c.getContext("2d",{willReadFrequently:true}),id=x.getImageData(0,0,W,H),d=id.data,n=W*H;
+  const g=new Uint8Array(n);
+  for(let i=0,j=0;i<n;i++,j+=4){const r=d[j],v=d[j+1],b=d[j+2];g[i]=r>v?(r>b?r:b):(v>b?v:b)}
+  const R=Math.max(8,Math.round(Math.max(W,H)/125)),K=0.3,DR=128;
+  const hs=new Float32Array(n),hq=new Float32Array(n);
+  for(let y=0;y<H;y++){const o=y*W;let s=0,q=0;
+    for(let i=0;i<=R&&i<W;i++){const v=g[o+i];s+=v;q+=v*v}
+    for(let i=0;i<W;i++){hs[o+i]=s;hq[o+i]=q;const a=i+R+1,b=i-R;if(a<W){const v=g[o+a];s+=v;q+=v*v}if(b>=0){const v=g[o+b];s-=v;q-=v*v}}}
+  const cs=new Float64Array(W),cq=new Float64Array(W);
+  for(let y=0;y<=R&&y<H;y++){const o=y*W;for(let i=0;i<W;i++){cs[i]+=hs[o+i];cq[i]+=hq[o+i]}}
+  for(let y=0;y<H;y++){const cy=Math.min(H-1,y+R)-Math.max(0,y-R)+1,o=y*W;
+    for(let i=0;i<W;i++){const cnt=(Math.min(W-1,i+R)-Math.max(0,i-R)+1)*cy,m=cs[i]/cnt,va=cq[i]/cnt-m*m;
+      const T=m*(1+K*(Math.sqrt(va>0?va:0)/DR-1)),out=g[o+i]>T?255:0,j=(o+i)*4;d[j]=d[j+1]=d[j+2]=out;d[j+3]=255}
+    const a=y+R+1,b=y-R;
+    if(a<H){const oa=a*W;for(let i=0;i<W;i++){cs[i]+=hs[oa+i];cq[i]+=hq[oa+i]}}
+    if(b>=0){const ob=b*W;for(let i=0;i<W;i++){cs[i]-=hs[ob+i];cq[i]-=hq[ob+i]}}}
+  x.putImageData(id,0,0);return c;
+}
+async function ocrPass(rot,size){
+  const c=binarize(drawRot(scan.src,rot,size));
+  const w=await getOCR();
+  const {data}=await w.recognize(c,{},{blocks:true,text:false});
+  const lines=[];
+  for(const b of data.blocks||[])for(const p of b.paragraphs||[])for(const l of p.lines||[]){
+    const ch=[];for(const wd of l.words||[])for(const s of wd.symbols||[]){const t=(s.text||"").trim();if(t)ch.push({t,c:s.confidence,b:s.bbox})}
+    if(ch.length)lines.push(ch)}
+  const res={rot,W:c.width,H:c.height,lines};
+  res.cjk=lines.reduce((a,l)=>a+l.filter(s=>/[㐀-鿿]/.test(s.t)&&s.c>=70).length,0);
+  res.hits=findMatches(res,false).length;res.score=res.hits*3+res.cjk/10;
+  return res;
+}
+function findMatches(res,singles){
+  const out=[];
+  for(const ln of res.lines){let i=0;
+    while(i<ln.length){let hit=0;
+      for(let L=Math.min(SCAN_MAXLEN,ln.length-i);L>=(singles?1:2);L--){const s=ln.slice(i,i+L).map(c=>c.t).join("");
+        if(BYID[s]){const seg=ln.slice(i,i+L);
+          out.push({w:BYID[s],x0:Math.min(...seg.map(c=>c.b.x0)),y0:Math.min(...seg.map(c=>c.b.y0)),x1:Math.max(...seg.map(c=>c.b.x1)),y1:Math.max(...seg.map(c=>c.b.y1))});
+          hit=L;break}}
+      i+=hit||1}}
+  return out;
+}
+function scanSay(step,pct){scan.step=step;if(pct!=null)scan.pct=pct;const s=$("#scanStep"),b=$("#scanPct");if(s)s.textContent=scan.step;if(b)b.style.width=Math.round(scan.pct*100)+"%"}
+async function runScan(auto){
+  if(scan.busy||!scan.src)return;scan.busy=true;scan.err="";scan.res=null;scan.pct=0;
+  const first=!ocrWorker;
+  ocrLog=m=>{const p=m.progress||0;
+    if(m.status==="recognizing text")scanSay(scanSay.lbl||"Woopy lit ta feuille…",scanSay.base+p*scanSay.span);
+    else if(/core|initializ|traineddata|api/.test(m.status))scanSay("Woopy télécharge son dictionnaire chinois (une seule fois)…",Math.min(.2,p*.2))};
+  scanSay.lbl="Woopy renifle ta feuille…";scanSay.base=first?.2:0;scanSay.span=first?.8:1;
+  scanSay(first?"Woopy prépare ses lunettes…":"Woopy renifle ta feuille…",scanSay.base);scan_render();
+  try{
+    await new Promise(r=>setTimeout(r,30));
+    let res=await ocrPass(scan.rot,SCAN_FULL);
+    if(auto&&res.hits<4){
+      let best=null;
+      for(const [i,r] of [90,270,180].entries()){
+        scanSay.lbl="Ta photo est peut-être de travers, Woopy penche la tête…";scanSay.base=.1+i*.2;scanSay.span=.2;scanSay(scanSay.lbl,scanSay.base);
+        const q=await ocrPass((scan.rot+r)%360,SCAN_QUICK);if(!best||q.score>best.score)best=q}
+      if(best&&best.hits>=3&&best.hits>res.hits){
+        scanSay.lbl="Trouvé ! Woopy relit dans le bon sens…";scanSay.base=.7;scanSay.span=.3;
+        const full=await ocrPass(best.rot,SCAN_FULL);if(full.hits>=res.hits){res=full;scan.rot=best.rot}}
+    }
+    scan.res=res;
+    const view=drawRot(scan.src,res.rot,1800,1);
+    const blob=await new Promise(r=>view.toBlob(r,"image/jpeg",.88));
+    if(scan.img)URL.revokeObjectURL(scan.img);
+    scan.img=blob?URL.createObjectURL(blob):view.toDataURL("image/jpeg",.85);
+  }catch(e){console.error(e);scan.err=String(e&&e.message||e)}
+  scan.busy=false;scan_render();
+}
+function scanWords(){
+  const ms=findMatches(scan.res,scan.singles);
+  const seen=new Map();ms.forEach(m=>{if(!seen.has(m.w.id))seen.set(m.w.id,m.w)});
+  const order={r:0,b:1,j:2};
+  return {ms,words:[...seen.values()].sort((a,b)=>order[a.c]-order[b.c]||[...b.h].length-[...a.h].length)};
+}
+function wordModal(w){
+  const b=S.words[w.id]?.b||0;
+  modal(`<div class="zh" style="font-size:52px;line-height:1.1">${esc(w.h)}</div>
+    <div><b style="font-size:20px">${esc(w.p)}</b> <span class="tag ${w.c}">${colName(w.c)}</span></div>
+    <div style="font-size:18px">${esc(w.fr)}</div>
+    ${w.ex?`<div class="muted zh">${esc(w.ex)}</div>`:w.parent?`<div class="muted">dans <span class="zh">${esc(w.parent)}</span></div>`:""}
+    <div class="muted" style="font-weight:700">${b>=3?"✓ Déjà maîtrisé":b?`Niveau ${b}/5 avec Woopy`:"Pas encore révisé avec Woopy"}</div>
+    <button class="btn wide" data-close>好的 · OK</button>`);
+}
+function scanPick(){const f=$("#scanFile");if(f){f.value="";f.click()}}
+async function scanFile(file){
+  if(!file||!/^image\//.test(file.type||"image/"))return toast("Il me faut une photo 📷");
+  try{const src=await decodePhoto(file);scan.src=src;scan.rot=0;scan.res=null;runScan(true)}
+  catch(e){toast("Je n'arrive pas à ouvrir cette image");}
+}
+function scan_render(){
+  if(!$("#scanRoot"))return;
+  const root=$("#scanRoot");
+  if(scan.busy){
+    root.innerHTML=`<section class="card scanprog"><div class="woopywrap">${woopySVG("happy")}</div>
+      <b id="scanStep">${esc(scan.step)}</b><div class="bar m" style="width:100%"><i id="scanPct" style="width:${Math.round(scan.pct*100)}%"></i></div>
+      <span class="muted" style="font-size:14px">Tout se passe sur ton appareil, la photo n'est envoyée nulle part.</span></section>`;return}
+  const intro=`<section class="card scanhero"><div class="woopywrap">${woopySVG(scan.res?"normal":"happy")}</div><div class="stat">
+      <h2>Scanner une feuille 扫一扫</h2>
+      <div class="bubble" style="margin-top:8px">Montre-moi une page de ton cours : je surligne tous les mots qu'on révise ensemble. <span class="zh">给我看看！</span></div></div></section>`;
+  const pickBtn=(label,cls="")=>`<button class="btn ${cls} wide scanbtn" data-pick>📷 ${label}</button>`;
+  if(!scan.res){
+    root.innerHTML=intro+`<div style="height:12px"></div>
+    <section class="card" style="display:flex;flex-direction:column;gap:12px">
+      ${scan.err?`<div class="bubble" style="border-color:var(--red)">Oups, Woopy s'est emmêlé les pattes : ${esc(scan.err)}. Réessaie, ou recharge la page.</div>`:""}
+      ${pickBtn("Prendre ou choisir une photo")}
+      <ul class="scantips muted">
+        <li>La feuille bien à plat, qui remplit tout l'écran.</li>
+        <li>De la lumière, sans ombre de téléphone dessus.</li>
+        <li>Le texte imprimé marche bien. L'écriture à la main, beaucoup moins.</li>
+        <li>Photo de travers ? Woopy essaie de la remettre droite tout seul.</li>
+      </ul>
+      <p class="muted" style="margin:0;font-size:14px">Le premier scan télécharge environ 6 Mo (le dictionnaire de Woopy), puis c'est plus rapide. Sur ordinateur, tu peux aussi glisser une image ici.</p>
+    </section>`;
+    bindScan();return}
+  const {ms,words}=scanWords();
+  const W=scan.res.W,H=scan.res.H;
+  const marks=ms.map((m,i)=>{const pad=(m.y1-m.y0)*.12;
+    const l=(m.x0-pad)/W*100,t=(m.y0-pad)/H*100,w=(m.x1-m.x0+2*pad)/W*100,h=(m.y1-m.y0+2*pad)/H*100;
+    return `<button class="mk ${m.w.c}${[...m.w.h].length===1?" one":""}${mastered(m.w.id)?" done":""}" data-m="${i}" aria-label="${esc(m.w.h)}" style="left:${l.toFixed(2)}%;top:${t.toFixed(2)}%;width:${w.toFixed(2)}%;height:${h.toFixed(2)}%"></button>`}).join("");
+  const n={r:0,j:0,b:0};words.forEach(w=>n[w.c]++);
+  const say=!words.length?(scan.res.cjk<15?"Je ne vois presque pas de chinois sur cette photo… Elle est floue, ou trop loin ? Essaie de te rapprocher.":"Je lis du chinois, mais aucun mot de ta liste. Soit c'est un nouveau cours (envoie-le à Florian !), soit la photo est trop floue.")
+    :words.length<5?`Seulement ${words.length} mot${words.length>1?"s":""}. Une photo plus nette ou plus proche m'aiderait.`
+    :`${words.length} mots de ta liste ! Touche un mot surligné pour voir sa fiche.`;
+  root.innerHTML=`<section class="card" style="display:flex;flex-direction:column;gap:10px">
+    <div class="row" style="flex-wrap:nowrap"><div class="woopywrap" style="width:72px;height:72px;flex:none">${woopySVG(words.length>=5?"happy":"oops")}</div><div class="bubble" style="flex:1">${esc(say)}</div></div>
+    <div class="scanlegend">${n.r?`<span class="tag r">${n.r} rose${n.r>1?"s":""}</span>`:""}${n.j?`<span class="tag j">${n.j} jaune${n.j>1?"s":""}</span>`:""}${n.b?`<span class="tag b">${n.b} bleu${n.b>1?"s":""}</span>`:""}${scan.rot?`<span class="muted" style="font-size:14px">photo tournée de ${scan.rot}°</span>`:""}</div>
+    <div class="scanbar">
+      <button class="btn ghost" id="scZoom" aria-pressed="${scan.zoom}">${scan.zoom?"🔍 Dézoomer":"🔍 Zoomer"}</button>
+      <button class="btn ghost" id="scRot">↻ Tourner</button>
+      <button class="btn ghost" id="scOne" aria-pressed="${scan.singles}">${scan.singles?"✓ ":""}Caractères seuls</button>
+    </div>
+  </section>
+  <div style="height:10px"></div>
+  <div class="scanwrap ${scan.zoom?"zoom":""}"><div class="scanimg"><img src="${scan.img}" alt="Ta photo avec les mots surlignés">${marks}</div></div>
+  <div style="height:12px"></div>
+  ${words.length>=4?`<button class="btn wide" id="scPlay">Réviser ces ${words.length} mots 开始</button><div style="height:10px"></div>`:""}
+  ${pickBtn("Une autre photo","ghost")}
+  ${words.length?`<div style="height:14px"></div><p class="label">Mots trouvés</p><div class="lex scanlist">${words.map(lexRow).join("")}</div>`:""}`;
+  root.querySelectorAll(".mk").forEach(b=>b.onclick=()=>wordModal(ms[+b.dataset.m].w));
+  root.querySelectorAll(".scanlist .lexrow").forEach((r,i)=>{r.tabIndex=0;r.setAttribute("role","button");r.onclick=()=>wordModal(words[i]);r.onkeydown=e=>{if(e.key==="Enter")wordModal(words[i])}});
+  $("#scZoom").onclick=()=>{scan.zoom=!scan.zoom;scan_render()};
+  $("#scOne").onclick=()=>{scan.singles=!scan.singles;scan_render()};
+  $("#scRot").onclick=()=>{scan.rot=(scan.rot+90)%360;runScan(false)};
+  if($("#scPlay"))$("#scPlay").onclick=()=>startGame(words);
+  bindScan();
+}
+function bindScan(){
+  const root=$("#scanRoot");
+  root.querySelectorAll("[data-pick]").forEach(b=>b.onclick=scanPick);
+}
+function scanner(){
+  view.innerHTML=`<input type="file" accept="image/*" id="scanFile" hidden><div id="scanRoot"></div>`;
+  $("#scanFile").onchange=e=>scanFile(e.target.files[0]);
+  const r=$("#scanRoot");r.ondragover=e=>{e.preventDefault()};
+  r.ondrop=e=>{e.preventDefault();if(!scan.busy&&e.dataTransfer.files[0])scanFile(e.dataTransfer.files[0])};
+  scan_render();
 }
 
 /* =================== BOUTIQUE =================== */
